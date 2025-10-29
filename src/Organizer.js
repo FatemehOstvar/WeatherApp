@@ -1,16 +1,12 @@
 export class Organizer {
-  constructor(unit) {
-    this.unit = unit === "metric" ? "C" : unit === "uk" ? `k` : `F`; //TODO what unit is this
-  }
-  organizeCurrent(today) {
-    return `\n\n${today.temperature} ${this.unit}\n\nreal feel:${today["real feel"]} ${this.unit}`;
-  }
 
-  organizeDaily(param) {
-    return undefined;
-  }
+    organize(daysInfo) { // an array of dicts
 
-  organizeHourly(param) {
-    return undefined;
-  }
+        return Array.from({length: daysInfo.length}).map((_, i) => {
+            return Object.entries(daysInfo[i])
+                .map(([key, value]) => [key, value])// done change this to  return a list to then take care of it in the logger
+                ;
+        });
+
+    }
 }
