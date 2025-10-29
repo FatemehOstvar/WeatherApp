@@ -1,29 +1,61 @@
-#dailyTemp{
+:root {
+    --bg-color: #eedcc7;
+}
+
+#daily {
     display: grid;
-    grid-template-columns: repeat(7, 1fr) ;
+    grid-template-columns: repeat(14, 1fr);
     overflow: scroll;
 }
 
-#hourlyTemp{
+#hourly {
     display: grid;
-    grid-template-columns: repeat(24, 1fr) ;
+    grid-template-columns: repeat(24, 1fr);
     overflow: scroll;
 
 }
-#currentTemp{
-    /*display: grid;*/
-    /*grid-template:  1fr / 1fr;*/
-    width: 30dvw;
-    height: 30vh;
-    border-radius: 10px;
+
+#hourly, #daily {
+    padding: 0.6rem;
+}
+
+::-webkit-slider-runnable-track {
+
+}
+
+#hourly > *, #daily > * {
+    padding: 1.5rem;
+}
+
+#hourly > * {
     text-align: center;
-    font-size: 32px;
-    background: #ffd3d3;
-    overflow: hidden;
-
 }
 
-#app>div{
-    display:grid;
-    grid-template: repeat(3,1fr)/ minmax(200px, 1fr) ;
+
+section {
+
+    background-color: var(--bg-color);
+    border-radius: 10px
+}
+
+h3 {
+    margin: 1rem 10px;
+}
+
+/*#current {*/
+/*    !*display: grid;*!*/
+/*    !*grid-template:  1fr / 1fr;*!*/
+/*    width: 30dvw;*/
+/*    height: 30vh;*/
+/*    border-radius: 10px;*/
+/*    text-align: center;*/
+/*    font-size: 32px;*/
+/*    background: #ffd3d3;*/
+/*    overflow: hidden;*/
+
+/*}*/
+
+#app > div {
+    /*display: grid;*/
+    /*grid-template: repeat(3, 1fr)/ minmax(200px, 1fr);*/
 }
