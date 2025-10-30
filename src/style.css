@@ -1,11 +1,13 @@
 :root {
-    --bg-color: #eedcc7;
+    --bg-color: #daf4f1;
+    --bg-color2: #fff;
 }
 
 #daily {
     display: grid;
     grid-template-columns: repeat(14, 1fr);
     overflow: scroll;
+
 }
 
 #hourly {
@@ -23,39 +25,117 @@
 
 }
 
+#current > div:first-child {
+    display: flex;
+    gap: 1rem;
+}
+
+em {
+    font-weight: bold;
+}
+
+#CurrentConds > div {
+    display: flex;
+}
+
+#CurrentConds {
+    display: grid;
+    grid-template-rows: repeat(auto-fit, minmax(100px, 1fr));
+
+}
+
+#CurrentConds > p:nth-child(1) {
+    margin: 0 0.3rem;
+    font-size: 1.2rem;
+}
+
+#CurrentConds > div {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+#CurrentConds > div > * {
+    position: relative;
+    left: 40px;
+    display: flex;
+    flex-direction: column;
+    font-size: 1.2rem;
+    padding-bottom: 1.6rem;
+}
+
+#CurrentConds > div > div :nth-child(1) {
+    font-weight: bold;
+}
+
+#CurrentConds > div > :nth-child(1) {
+    grid-area: 2/1/2/2;
+}
+
+#CurrentConds > div > :nth-child(2) {
+    grid-area: 2/2/2/-1;
+}
+
+#CurrentConds > div > * {
+    display: flex;
+}
+
 #hourly > *, #daily > * {
     padding: 1.5rem;
+    opacity: 0.85;
+}
+
+#current > div:first-child > p:first-child {
+    box-shadow: 2px 0 0 #b1b1b1;
+    padding: 0.6rem;
+    font-weight: bold;
+    font-size: 2.2rem;
+}
+
+#current > div:first-child > div:nth-child(2) > p {
+    margin: 3rem 0 0;
+    padding-left: 0.3rem;
+}
+
+#current > div:first-child > div:nth-child(2) > p:nth-child(2) {
+    margin: 0;
+}
+
+#daily > *, #hourly > * {
+    display: grid;
+    grid-template-rows: repeat(3, 2.8rem);
+    grid-template-columns: 3rem;
 }
 
 #hourly > * {
     text-align: center;
 }
 
-
 section {
-
     background-color: var(--bg-color);
-    border-radius: 10px
+    border-radius: 10px;
 }
 
 h3 {
     margin: 1rem 10px;
 }
 
-/*#current {*/
-/*    !*display: grid;*!*/
-/*    !*grid-template:  1fr / 1fr;*!*/
-/*    width: 30dvw;*/
-/*    height: 30vh;*/
-/*    border-radius: 10px;*/
-/*    text-align: center;*/
-/*    font-size: 32px;*/
-/*    background: #ffd3d3;*/
-/*    overflow: hidden;*/
+button[name="change-city"] {
+    position: absolute;
+    top: 3.3rem;
+    left: 90%;
+    border: none;
+    background-color: var(--bg-color2);
+}
 
-/*}*/
+#daily {
+    text-align: center;
+}
 
-#app > div {
-    /*display: grid;*/
-    /*grid-template: repeat(3, 1fr)/ minmax(200px, 1fr);*/
+
+#thermometer {
+    position: absolute;
+    left: 85%;
+    top: 3.3rem;
+    border: none;
+    background-color: var(--bg-color2);
 }

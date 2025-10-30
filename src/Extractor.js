@@ -1,6 +1,6 @@
 export class Extractor {
   data;
-
+  icon;
   constructor(city, unit) {
     this.city = city;
     this.unit = unit;
@@ -14,23 +14,26 @@ export class Extractor {
   }
 
   async extractCurrent() {
-    return {
-      temperature: await this.data["currentConditions"]["temp"],
-      "real feel": await this.data["currentConditions"]["feelslike"],
-      humidity: await this.data["currentConditions"]["humidity"],
-      icon: await this.data["currentConditions"]["icon"],
-      uvindex: await this.data["currentConditions"]["uvindex"],
-      description: await this.data["currentConditions"]["description"],
-    };
+    return [
+      {
+        temperature: await this.data["currentConditions"]["temp"],
+        icon: await this.data["currentConditions"]["icon"],
+        "real feel": await this.data["currentConditions"]["feelslike"],
+        description: await this.data["currentConditions"]["description"],
+        humidity: await this.data["currentConditions"]["humidity"],
+        uvindex: await this.data["currentConditions"]["uvindex"],
+      },
+    ];
   }
 
   // should return an array of size 14
-  // !!! I changes length: days.length -1 to length: days.length
+  // this length used is different from that length
   async extractDaily() {
     const days = await this.data["days"];
-    return Array.from({ length: days.length }, (_, i) => {
+    const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    return Array.from({ length: days.length - 1 }, (_, i) => {
       return {
-        day: days[i]["datetime"],
+        day: daysOfWeek[new Date(days[i]["datetime"]).getDay()],
         "real feel": days[i]["feelslike"],
         humidity: days[i]["humidity"],
         icon: days[i]["icon"],
@@ -49,20 +52,23 @@ export class Extractor {
       ...(await this.data["days"][0]["hours"]),
       ...(await this.data["days"][1]["hours"]),
     ];
-
-    let time = await this.data["currentConditions"]["datetime"];
+    let time = await this.data["currentConditions"]["datetime"].split(":")[0];
     let starter;
-    for (let i = 0; i < 48; i++) {
-      if (hours[i]["datetime"] > time) {
-        starter = i;
-        break;
+    if (parseInt(time) === 23) {
+      starter = 0;
+    } else {
+      for (let i = 0; i < 48; i++) {
+        if (hours[i]["datetime"] > time) {
+          starter = i;
+          break;
+        }
       }
     }
-    hours = hours.slice(starter, 25 + starter);
+    hours = hours.slice(starter, 24 + starter);
 
     return Array.from({ length: hours.length }).map((_, i) => {
       return {
-        hour: hours[i]["datetime"],
+        hour: parseInt(hours[i]["datetime"].split(":")[0]),
         "real feel": hours[i]["feelslike"],
         humidity: hours[i]["humidity"],
         icon: hours[i]["icon"],
