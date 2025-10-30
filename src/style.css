@@ -1,3 +1,10 @@
+html {
+    font-family: Inter, sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
+}
+
 :root {
     --bg-color: #daf4f1;
     --bg-color2: #fff;
@@ -32,9 +39,6 @@
     gap: 0.5rem;
 }
 
-em {
-    font-weight: bold;
-}
 
 #CurrentConds > div {
     display: flex;
@@ -62,11 +66,13 @@ em {
     display: flex;
     flex-direction: column;
     font-size: 1.2rem;
-    padding-bottom: 1.6rem;
+    margin: 0 1.6rem 0.9rem 0;
 }
+
 
 #CurrentConds > div > div :nth-child(1) {
     font-weight: bold;
+
 }
 
 #CurrentConds > div > :nth-child(1) {
@@ -149,4 +155,8 @@ button[name="change-city"] {
     position: absolute;
     top: 0;
     font-size: 2.6rem;
+}
+
+.conds {
+    padding: 1.1rem;
 }
