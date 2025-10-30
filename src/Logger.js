@@ -5,6 +5,11 @@ export class Logger {
     //{query: '?url'}
   );
 
+  logCity(city) {
+    const Currcity = document.querySelector("#city");
+    Currcity.textContent = city;
+  }
+
   logCurrent(Info, unit) {
     let cnt = 0;
     // put an image of the corresponding icon and append it as child
@@ -52,8 +57,12 @@ export class Logger {
   // TODO logWeatherAsBG
   async logWeatherAsBG(iconText) {
     const weatherAsBG = document.querySelector("#app");
-    weatherAsBG.style.backgroundImage = `url('${this.wAnimation}')`;
+    weatherAsBG.style.backgroundImage = `url(${this.wAnimation()})`;
     console.log(weatherAsBG);
+  }
+
+  wAnimation() {
+    return "./animations/windy.webm";
   }
 
   async log(Info, type, unit) {
@@ -96,7 +105,4 @@ export class Logger {
   //   const promise = await response.json();
   //   return promise["data"]["images"]["original"]["url"];
   // }
-  wAnimation() {
-    return "./animations/windy.webm";
-  }
 }

@@ -1,6 +1,7 @@
 export class Extractor {
   data;
   icon;
+
   constructor(city, unit) {
     this.city = city;
     this.unit = unit;
@@ -16,7 +17,7 @@ export class Extractor {
   async extractCurrent() {
     return [
       {
-        temperature: await this.data["currentConditions"]["temp"],
+        temperature: Math.round(await this.data["currentConditions"]["temp"]),
         icon: await this.data["currentConditions"]["icon"],
         "real feel": await this.data["currentConditions"]["feelslike"],
         description: await this.data["currentConditions"]["description"],
@@ -38,7 +39,7 @@ export class Extractor {
         humidity: days[i]["humidity"],
         icon: days[i]["icon"],
         uvindex: days[i]["uvindex"],
-        temp: days[i]["temp"],
+        temp: Math.round(days[i]["temp"]),
         tempmin: days[i]["tempmin"],
         tempmax: days[i]["tempmax"],
         conditions: days[i]["conditions"],
@@ -73,7 +74,7 @@ export class Extractor {
         humidity: hours[i]["humidity"],
         icon: hours[i]["icon"],
         uvindex: hours[i]["uvindex"],
-        temp: hours[i]["temp"],
+        temp: Math.round(hours[i]["temp"]),
         conditions: hours[i]["consditions"],
       };
     });

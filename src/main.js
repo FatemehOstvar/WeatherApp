@@ -34,6 +34,7 @@ class Main {
   }
 
   async display() {
+    this.logger.logCity(this.enteredCity);
     await this.extractor.extract();
     const currentDataText = this.organizer.organize(
       await this.extractor.extractCurrent(),

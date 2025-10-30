@@ -1,6 +1,8 @@
 :root {
     --bg-color: #daf4f1;
     --bg-color2: #fff;
+
+    font-size: 14px;
 }
 
 #daily {
@@ -27,7 +29,7 @@
 
 #current > div:first-child {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 em {
@@ -51,12 +53,12 @@ em {
 
 #CurrentConds > div {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(38dvw, 1fr));
 }
 
 #CurrentConds > div > * {
     position: relative;
-    left: 40px;
+    left: 10dvw;
     display: flex;
     flex-direction: column;
     font-size: 1.2rem;
@@ -89,11 +91,13 @@ em {
     padding: 0.6rem;
     font-weight: bold;
     font-size: 2.2rem;
+    margin-top: 8rem;
 }
 
 #current > div:first-child > div:nth-child(2) > p {
-    margin: 3rem 0 0;
+    margin: 9rem 0 0;
     padding-left: 0.3rem;
+
 }
 
 #current > div:first-child > div:nth-child(2) > p:nth-child(2) {
@@ -102,7 +106,7 @@ em {
 
 #daily > *, #hourly > * {
     display: grid;
-    grid-template-rows: repeat(3, 2.8rem);
+    grid-template-rows: 2rem 4rem;
     grid-template-columns: 3rem;
 }
 
@@ -122,7 +126,7 @@ h3 {
 button[name="change-city"] {
     position: absolute;
     top: 3.3rem;
-    left: 90%;
+    right: 25px;
     border: none;
     background-color: var(--bg-color2);
 }
@@ -134,8 +138,15 @@ button[name="change-city"] {
 
 #thermometer {
     position: absolute;
-    left: 85%;
+    right: 90px;
     top: 3.3rem;
     border: none;
     background-color: var(--bg-color2);
+}
+
+#city {
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    font-size: 2.6rem;
 }
