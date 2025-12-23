@@ -7,7 +7,13 @@
     <title>Weather App</title>
 </head>
 <body>
-<header></header>
+<header class="auth-bar">
+    <div class="auth-controls">
+        <button id="open-login" type="button">Log in</button>
+        <button id="logout" type="button" class="hidden">Log out</button>
+        <span id="session-status" aria-live="polite"></span>
+    </div>
+</header>
 <div id="app">
     <p id = 'city'></p>
     <!--    <form>-->
@@ -245,6 +251,30 @@
             </div>
         </div>
     </section>
+</div>
+
+<div id="auth-modal" class="auth-modal hidden" role="dialog" aria-modal="true">
+    <div class="auth-dialog">
+        <h2>Sign in to continue</h2>
+        <p class="auth-message" data-auth-message></p>
+        <form id="auth-form">
+            <label>
+                Email
+                <input type="email" name="email" autocomplete="username" required>
+                <span class="field-error" data-error-for="email"></span>
+            </label>
+            <label>
+                Password
+                <input type="password" name="password" autocomplete="current-password" required>
+                <span class="field-error" data-error-for="password"></span>
+            </label>
+            <div class="auth-actions">
+                <button type="submit">Sign in</button>
+                <button type="button" data-cancel>Cancel</button>
+            </div>
+            <p class="auth-error" data-general-error></p>
+        </form>
+    </div>
 </div>
 
 <script type="module" src="/src/main.js"></script>

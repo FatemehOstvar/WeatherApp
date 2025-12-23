@@ -1,9 +1,8 @@
 export class Logger {
-  loaders = import.meta.glob(
-    "./images/*.svg",
-    { as: "url" },
-    //{query: '?url'}
-  );
+  loaders = import.meta.glob("./images/*.svg", {
+    query: "?url",
+    import: "default",
+  });
 
   logCity(city) {
     const Currcity = document.querySelector("#city");

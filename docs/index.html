@@ -5,11 +5,17 @@
     <!--    <link rel="icon" type="image/svg+xml" href="/vite.svg"/>-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Weather App</title>
-  <script type="module" crossorigin src="/WeatherApp/assets/index-VZR57pq4.js"></script>
-  <link rel="stylesheet" crossorigin href="/WeatherApp/assets/index-D8slI6K5.css">
+  <script type="module" crossorigin src="/WeatherApp/assets/index-BsEWEOoU.js"></script>
+  <link rel="stylesheet" crossorigin href="/WeatherApp/assets/index-Cu4VSIuM.css">
 </head>
 <body>
-<header></header>
+<header class="auth-bar">
+    <div class="auth-controls">
+        <button id="open-login" type="button">Log in</button>
+        <button id="logout" type="button" class="hidden">Log out</button>
+        <span id="session-status" aria-live="polite"></span>
+    </div>
+</header>
 <div id="app">
     <p id = 'city'></p>
     <!--    <form>-->
@@ -247,6 +253,30 @@
             </div>
         </div>
     </section>
+</div>
+
+<div id="auth-modal" class="auth-modal hidden" role="dialog" aria-modal="true">
+    <div class="auth-dialog">
+        <h2>Sign in to continue</h2>
+        <p class="auth-message" data-auth-message></p>
+        <form id="auth-form">
+            <label>
+                Email
+                <input type="email" name="email" autocomplete="username" required>
+                <span class="field-error" data-error-for="email"></span>
+            </label>
+            <label>
+                Password
+                <input type="password" name="password" autocomplete="current-password" required>
+                <span class="field-error" data-error-for="password"></span>
+            </label>
+            <div class="auth-actions">
+                <button type="submit">Sign in</button>
+                <button type="button" data-cancel>Cancel</button>
+            </div>
+            <p class="auth-error" data-general-error></p>
+        </form>
+    </div>
 </div>
 
 </body>

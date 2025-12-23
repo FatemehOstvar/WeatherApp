@@ -2,6 +2,14 @@ import "./style.css";
 import { Logger } from "./Logger.js";
 import { Extractor } from "./Extractor.js";
 import { Organizer } from "./Organizer.js";
+import { ApiClient } from "./ApiClient.js";
+import { AuthService } from "./AuthService.js";
+import { AuthUI } from "./AuthUI.js";
+
+const apiClient = new ApiClient();
+const authService = new AuthService(apiClient);
+const authUI = new AuthUI(authService);
+apiClient.setUnauthorizedHandler(() => authUI.handleUnauthorized());
 
 class Main {
   constructor() {

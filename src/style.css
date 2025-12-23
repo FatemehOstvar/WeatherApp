@@ -12,6 +12,10 @@ html {
     font-size: 14px;
 }
 
+#app {
+    position: relative;
+}
+
 #daily {
     display: grid;
     grid-template-columns: repeat(14, 1fr);
@@ -160,4 +164,125 @@ button[name="change-city"] {
 
 .conds {
     padding: 1.1rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.auth-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background-color: var(--bg-color2);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.auth-controls button {
+    border: 1px solid #0b6efd;
+    background-color: #0b6efd;
+    color: #fff;
+    border-radius: 6px;
+    padding: 0.35rem 0.8rem;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.auth-controls #logout {
+    background-color: #fff;
+    color: #0b6efd;
+}
+
+#session-status {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.auth-modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(3px);
+    z-index: 9;
+}
+
+.auth-dialog {
+    background-color: var(--bg-color2);
+    padding: 1.5rem;
+    border-radius: 12px;
+    width: min(420px, 90vw);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.auth-dialog h2 {
+    margin: 0;
+}
+
+.auth-dialog form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.auth-dialog label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-weight: 600;
+}
+
+.auth-dialog input {
+    padding: 0.55rem 0.7rem;
+    border-radius: 8px;
+    border: 1px solid #c8c8c8;
+}
+
+.auth-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.7rem;
+}
+
+.auth-actions button {
+    border: 1px solid #0b6efd;
+    padding: 0.55rem 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #0b6efd;
+    color: #fff;
+    font-weight: 700;
+}
+
+.auth-actions [data-cancel] {
+    background-color: #fff;
+    color: #0b6efd;
+}
+
+.auth-message {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.auth-error {
+    color: #b3261e;
+    min-height: 1.25rem;
+    margin: 0;
+}
+
+.field-error {
+    color: #b3261e;
+    font-size: 0.9rem;
+    min-height: 1.25rem;
 }
