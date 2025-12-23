@@ -2,6 +2,7 @@ import "./style.css";
 import { Logger } from "./Logger.js";
 import { Extractor } from "./Extractor.js";
 import { Organizer } from "./Organizer.js";
+import { AuthUI } from "./auth/ui.js";
 
 class Main {
   constructor() {
@@ -112,3 +113,6 @@ class Main {
 
 const main = new Main();
 await main.display();
+
+const authUI = new AuthUI();
+authUI.initialize();
