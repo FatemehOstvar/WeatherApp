@@ -34,23 +34,28 @@ class Main {
   }
 
   async display() {
-    this.logger.logCity(this.enteredCity);
-    await this.extractor.extract();
-    const currentDataText = this.organizer.organize(
-      await this.extractor.extractCurrent(),
-    );
-    const dailyDataText = this.organizer.organize(
-      await this.extractor.extractDaily(),
-    );
-    const hourlyDataText = this.organizer.organize(
-      await this.extractor.extractHourly(),
-    );
-    this.createSpecificThermometer();
-    this.logger.logCurrent(currentDataText[0], this.sign[this.unit]);
-    await this.logger.log(dailyDataText, "daily", this.sign[this.unit]);
-    await this.logger.log(hourlyDataText, "hourly", this.sign[this.unit]);
-    console.log(typeof currentDataText[0][1][1]);
-    await this.logger.logWeatherAsBG(currentDataText[0][1][1]);
+    try {
+      this.logger.logCity(this.enteredCity);
+      await this.extractor.extract();
+      const currentDataText = this.organizer.organize(
+        await this.extractor.extractCurrent(),
+      );
+      const dailyDataText = this.organizer.organize(
+        await this.extractor.extractDaily(),
+      );
+      const hourlyDataText = this.organizer.organize(
+        await this.extractor.extractHourly(),
+      );
+      this.createSpecificThermometer();
+      this.logger.logCurrent(currentDataText[0], this.sign[this.unit]);
+      await this.logger.log(dailyDataText, "daily", this.sign[this.unit]);
+      await this.logger.log(hourlyDataText, "hourly", this.sign[this.unit]);
+      console.log(typeof currentDataText[0][1][1]);
+      await this.logger.logWeatherAsBG(currentDataText[0][1][1]);
+    } catch (error) {
+      alert("Unable to load weather data. Please try again later.");
+      console.error(error);
+    }
   }
 
   toggleUnit() {

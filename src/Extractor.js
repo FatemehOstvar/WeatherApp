@@ -8,10 +8,21 @@ export class Extractor {
   }
 
   async extract() {
-    const temperature = await fetch(
-      `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${this.city}?unitGroup=${this.unit}&key=E47KCVVZKD5PP9P3WD2KRQFDC`,
-    );
-    this.data = await temperature.json();
+    try {
+      const response = await fetch(
+        `/api/weather?city=${encodeURIComponent(this.city)}&unit=${encodeURIComponent(this.unit)}`,
+      );
+
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || `Weather request failed with status ${response.status}`);
+      }
+
+      this.data = await response.json();
+    } catch (error) {
+      console.error("Unable to fetch weather data", error);
+      throw error;
+    }
   }
 
   async extractCurrent() {
