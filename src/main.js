@@ -26,10 +26,11 @@ class Main {
 
   SetCity() {
     const btn = document.querySelector('button[name="change-city"]');
-    btn.addEventListener("click", async (event) => {
-      this.enteredCity = prompt("City?");
-      this.extractor = new Extractor(this.enteredCity, this.unit);
-      await this.display();
+    btn.addEventListener("click", async () => {
+      const nextCity = prompt("City?");
+      if (nextCity) {
+        await this.setCityName(nextCity);
+      }
     });
   }
 
@@ -108,7 +109,415 @@ class Main {
       ? (thermometer.innerHTML = Cbtn)
       : (thermometer.innerHTML = FbtnSVG);
   }
+
+  async setCityName(cityName) {
+    this.enteredCity = cityName;
+    this.extractor = new Extractor(this.enteredCity, this.unit);
+    await this.display();
+  }
+
+  async setUnit(unit) {
+    if (!unit || this.unit === unit) return;
+    this.unit = unit;
+    this.extractor = new Extractor(this.enteredCity, this.unit);
+    await this.display();
+  }
 }
 
 const main = new Main();
+class Dashboard {
+  constructor(main) {
+    this.main = main;
+    this.authState = {
+      cities: [],
+      settings: {
+        unitPreference: main.unit,
+        emailAlerts: false,
+        shareAnalytics: false,
+      },
+    };
+    this.overlay = document.querySelector("#dashboard-overlay");
+    this.trigger = document.querySelector("#dashboard-trigger");
+    this.closeButtons = document.querySelectorAll("[data-dashboard-close]");
+    this.tabButtons = Array.from(document.querySelectorAll(".dashboard__tab"));
+    this.tabPanels = Array.from(document.querySelectorAll("[data-tab-panel]"));
+    this.searchForm = document.querySelector("#city-search-form");
+    this.searchInput = document.querySelector("#city-search-input");
+    this.searchResults = document.querySelector("#city-search-results");
+    this.savedCitiesContainer = document.querySelector("#saved-cities");
+    this.cityActionError = document.querySelector("#city-action-error");
+    this.refreshCitiesButton = document.querySelector("#refresh-cities");
+    this.settingsForm = document.querySelector("#settings-form");
+    this.settingsStatus = document.querySelector("#settings-status");
+    this.bindEvents();
+    this.hydrate();
+  }
+
+  bindEvents() {
+    this.trigger?.addEventListener("click", () => this.open());
+    this.closeButtons?.forEach((btn) =>
+      btn.addEventListener("click", () => this.close()),
+    );
+    this.overlay?.addEventListener("click", (event) => {
+      if (event.target === this.overlay) this.close();
+    });
+    this.tabButtons.forEach((btn) =>
+      btn.addEventListener("click", () => this.switchTab(btn.dataset.tabTarget)),
+    );
+    this.searchForm?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      await this.searchCities(this.searchInput.value);
+    });
+    this.refreshCitiesButton?.addEventListener("click", async () => {
+      await this.loadSavedCities();
+    });
+    this.settingsForm?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      await this.saveSettings(new FormData(this.settingsForm));
+    });
+  }
+
+  open() {
+    this.overlay?.classList.remove("hidden");
+    this.switchTab("cities");
+  }
+
+  close() {
+    this.overlay?.classList.add("hidden");
+  }
+
+  async hydrate() {
+    await Promise.all([this.loadSavedCities(), this.loadSettings()]);
+  }
+
+  switchTab(tabName) {
+    this.tabButtons.forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.tabTarget === tabName);
+      btn.setAttribute(
+        "aria-selected",
+        btn.dataset.tabTarget === tabName ? "true" : "false",
+      );
+    });
+    this.tabPanels.forEach((panel) => {
+      panel.classList.toggle("hidden", panel.dataset.tabPanel !== tabName);
+    });
+  }
+
+  async searchCities(query) {
+    this.clearCityError();
+    if (!query || query.trim().length < 2) {
+      this.showCityError("Enter at least 2 characters to search.");
+      return;
+    }
+    try {
+      const response = await fetch(
+        `/api/cities/search?query=${encodeURIComponent(query.trim())}`,
+      );
+      if (!response.ok) throw new Error("Unable to search for cities right now.");
+      const result = await response.json();
+      const cities = Array.isArray(result) ? result : result.results || [];
+      this.renderSearchResults(cities);
+    } catch (error) {
+      this.showCityError(error.message);
+      this.renderSearchResults([]);
+    }
+  }
+
+  renderSearchResults(cities) {
+    this.searchResults.textContent = "";
+    if (!cities.length) {
+      const empty = document.createElement("p");
+      empty.className = "muted";
+      empty.textContent = "No cities found yet. Try another search term.";
+      this.searchResults.appendChild(empty);
+      return;
+    }
+    cities.forEach((city) => {
+      const card = document.createElement("article");
+      card.className = "card";
+      const top = document.createElement("div");
+      top.className = "card__top";
+      const title = document.createElement("p");
+      title.className = "card__title";
+      title.textContent = city.label || city.name || "Unnamed city";
+      const meta = document.createElement("p");
+      meta.className = "card__meta";
+      const nameText = city.name || city.label || "Unknown city";
+      meta.textContent = city.country ? `${nameText}, ${city.country}` : nameText;
+      top.appendChild(title);
+      top.appendChild(meta);
+
+      const actions = document.createElement("div");
+      actions.className = "card__actions";
+      const addBtn = document.createElement("button");
+      addBtn.className = "primary";
+      addBtn.type = "button";
+      addBtn.textContent = "Add";
+      addBtn.addEventListener("click", () => this.addCity(city));
+      actions.appendChild(addBtn);
+
+      card.appendChild(top);
+      card.appendChild(actions);
+      this.searchResults.appendChild(card);
+    });
+  }
+
+  async addCity(city) {
+    this.clearCityError();
+    const currentState = this.cloneCities();
+    const optimisticCity = {
+      id: city.id || city.cityId || city.name,
+      cityId: city.id || city.cityId || city.name,
+      name: city.name || city.city || city.label || "Unknown",
+      country: city.country || city.countryCode || "",
+      label: city.label || city.name || city.city,
+    };
+    if (!this.authState.cities.find((item) => item.id === optimisticCity.id)) {
+      this.authState.cities = [...this.authState.cities, optimisticCity];
+      this.renderSavedCities();
+    }
+    try {
+      const response = await fetch("/api/users/me/cities", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cityId: optimisticCity.cityId,
+          label: optimisticCity.label,
+        }),
+      });
+      if (!response.ok) throw new Error("Unable to add city right now.");
+      const savedCity = await response.json();
+      this.mergeCity(savedCity);
+      this.renderSavedCities();
+    } catch (error) {
+      this.authState.cities = currentState;
+      this.renderSavedCities();
+      this.showCityError(error.message);
+    }
+  }
+
+  mergeCity(city) {
+    const normalized = {
+      id: city.id || city.cityId || city.name,
+      cityId: city.cityId || city.id || city.name,
+      name: city.name || city.label,
+      country: city.country || "",
+      label: city.label || city.name,
+    };
+    const existingIndex = this.authState.cities.findIndex(
+      (item) => item.id === normalized.id,
+    );
+    if (existingIndex >= 0) {
+      this.authState.cities[existingIndex] = normalized;
+    } else {
+      this.authState.cities = [...this.authState.cities, normalized];
+    }
+  }
+
+  async loadSavedCities() {
+    this.clearCityError();
+    try {
+      const response = await fetch("/api/users/me/cities");
+      if (!response.ok) throw new Error("Unable to load saved cities.");
+      const data = await response.json();
+      this.authState.cities = Array.isArray(data) ? data : data.cities || [];
+      this.renderSavedCities();
+    } catch (error) {
+      this.showCityError(error.message);
+    }
+  }
+
+  renderSavedCities() {
+    this.savedCitiesContainer.textContent = "";
+    if (!this.authState.cities.length) {
+      const empty = document.createElement("p");
+      empty.className = "muted";
+      empty.textContent = "You have not added any cities yet.";
+      this.savedCitiesContainer.appendChild(empty);
+      return;
+    }
+    this.authState.cities.forEach((city) => {
+      const card = document.createElement("article");
+      card.className = "card";
+      const top = document.createElement("div");
+      top.className = "card__top";
+      const title = document.createElement("p");
+      title.className = "card__title";
+      title.textContent = city.label || city.name || "Unnamed city";
+      const meta = document.createElement("p");
+      meta.className = "card__meta";
+      const name = city.name || city.label || "Unknown city";
+      meta.textContent = city.country ? `${name}, ${city.country}` : name;
+      top.appendChild(title);
+      top.appendChild(meta);
+
+      const actions = document.createElement("div");
+      actions.className = "card__actions";
+
+      const useBtn = document.createElement("button");
+      useBtn.className = "icon-button";
+      useBtn.type = "button";
+      useBtn.textContent = "Use";
+      useBtn.title = "Load this city on the main view";
+      useBtn.addEventListener("click", async () => {
+        await this.main.setCityName(city.name || city.label);
+      });
+
+      const removeBtn = document.createElement("button");
+      removeBtn.className = "icon-button";
+      removeBtn.type = "button";
+      removeBtn.textContent = "Remove";
+      removeBtn.addEventListener("click", () => this.removeCity(city));
+
+      actions.appendChild(useBtn);
+      actions.appendChild(removeBtn);
+
+      const editRow = document.createElement("div");
+      editRow.className = "form-row";
+      const input = document.createElement("input");
+      input.type = "text";
+      input.value = city.label || city.name;
+      input.placeholder = "City label";
+      input.setAttribute(
+        "aria-label",
+        `Label for ${city.name || city.label || "city"}`,
+      );
+      const saveBtn = document.createElement("button");
+      saveBtn.className = "primary";
+      saveBtn.type = "button";
+      saveBtn.textContent = "Save label";
+      saveBtn.addEventListener("click", () =>
+        this.updateCityLabel(city, input.value),
+      );
+
+      card.appendChild(top);
+      card.appendChild(editRow);
+      editRow.appendChild(input);
+      editRow.appendChild(saveBtn);
+      card.appendChild(actions);
+      this.savedCitiesContainer.appendChild(card);
+    });
+  }
+
+  async updateCityLabel(city, label) {
+    this.clearCityError();
+    const nextLabel = label.trim();
+    if (nextLabel.length < 2) {
+      this.showCityError("Labels must be at least 2 characters.");
+      return;
+    }
+    const previousState = this.cloneCities();
+    this.authState.cities = this.authState.cities.map((item) =>
+      (item.id || item.cityId) === (city.id || city.cityId)
+        ? { ...item, label: nextLabel }
+        : item,
+    );
+    this.renderSavedCities();
+    try {
+      const response = await fetch(
+        `/api/users/me/cities/${encodeURIComponent(city.id || city.cityId)}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ label: nextLabel }),
+        },
+      );
+      if (!response.ok)
+        throw new Error("Could not update city label. Changes reverted.");
+    } catch (error) {
+      this.authState.cities = previousState;
+      this.renderSavedCities();
+      this.showCityError(error.message);
+    }
+  }
+
+  async removeCity(city) {
+    this.clearCityError();
+    const previousState = this.cloneCities();
+    this.authState.cities = this.authState.cities.filter(
+      (item) => (item.id || item.cityId) !== (city.id || city.cityId),
+    );
+    this.renderSavedCities();
+    try {
+      const response = await fetch(
+        `/api/users/me/cities/${encodeURIComponent(city.id || city.cityId)}`,
+        { method: "DELETE" },
+      );
+      if (!response.ok) throw new Error("Failed to remove city. Restoring...");
+    } catch (error) {
+      this.authState.cities = previousState;
+      this.renderSavedCities();
+      this.showCityError(error.message);
+    }
+  }
+
+  cloneCities() {
+    return this.authState.cities.map((city) => ({ ...city }));
+  }
+
+  showCityError(message) {
+    if (this.cityActionError) this.cityActionError.textContent = message;
+  }
+
+  clearCityError() {
+    if (this.cityActionError) this.cityActionError.textContent = "";
+  }
+
+  async loadSettings() {
+    try {
+      const response = await fetch("/api/users/me/settings");
+      if (!response.ok) throw new Error("Unable to load settings right now.");
+      const data = await response.json();
+      this.authState.settings = {
+        unitPreference: data.unitPreference || this.main.unit,
+        emailAlerts: Boolean(data.emailAlerts),
+        shareAnalytics: Boolean(data.shareAnalytics),
+      };
+      this.populateSettingsForm();
+      if (this.settingsStatus) this.settingsStatus.textContent = "Settings loaded.";
+    } catch (error) {
+      if (this.settingsStatus) this.settingsStatus.textContent = error.message;
+    }
+  }
+
+  populateSettingsForm() {
+    if (!this.settingsForm) return;
+    this.settingsForm.unitPreference.value =
+      this.authState.settings.unitPreference || "metric";
+    this.settingsForm.emailAlerts.checked = Boolean(
+      this.authState.settings.emailAlerts,
+    );
+    this.settingsForm.shareAnalytics.checked = Boolean(
+      this.authState.settings.shareAnalytics,
+    );
+  }
+
+  async saveSettings(formData) {
+    const payload = {
+      unitPreference: formData.get("unitPreference") || "metric",
+      emailAlerts: Boolean(formData.get("emailAlerts")),
+      shareAnalytics: Boolean(formData.get("shareAnalytics")),
+    };
+    const previousSettings = { ...this.authState.settings };
+    this.authState.settings = payload;
+    if (this.settingsStatus) this.settingsStatus.textContent = "Saving...";
+    this.populateSettingsForm();
+    try {
+      const response = await fetch("/api/users/me/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error("Unable to save settings.");
+      if (this.settingsStatus) this.settingsStatus.textContent = "Saved!";
+      await this.main.setUnit(payload.unitPreference);
+    } catch (error) {
+      this.authState.settings = previousSettings;
+      this.populateSettingsForm();
+      if (this.settingsStatus) this.settingsStatus.textContent = error.message;
+    }
+  }
+}
+
 await main.display();
+new Dashboard(main);

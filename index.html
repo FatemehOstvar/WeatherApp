@@ -7,9 +7,19 @@
     <title>Weather App</title>
 </head>
 <body>
-<header></header>
+<header class="app-header">
+    <div class="brand">
+        <span class="brand__dot"></span>
+        <p class="brand__title">WeatherBoard</p>
+    </div>
+    <div class="header-actions">
+        <button id="dashboard-trigger" class="avatar-button" aria-haspopup="dialog" aria-controls="dashboard-overlay" title="Open dashboard">
+            <span class="avatar-button__initials">YW</span>
+        </button>
+    </div>
+</header>
 <div id="app">
-    <p id = 'city'></p>
+    <p id='city'></p>
     <!--    <form>-->
     <!--        <label for="enteredCity"></label>-->
     <!--        <input type="text" id="enteredCity">-->
@@ -245,6 +255,67 @@
             </div>
         </div>
     </section>
+</div>
+
+<div id="dashboard-overlay" class="dashboard hidden" role="dialog" aria-modal="true" aria-labelledby="dashboard-title">
+    <div class="dashboard__panel">
+        <div class="dashboard__header">
+            <div>
+                <p id="dashboard-title">Dashboard</p>
+                <p class="dashboard__subtitle">Manage your saved cities and settings.</p>
+            </div>
+            <button class="icon-button" data-dashboard-close aria-label="Close dashboard">✕</button>
+        </div>
+        <div class="dashboard__tabs" role="tablist">
+            <button class="dashboard__tab active" role="tab" aria-selected="true" data-tab-target="cities">My Cities</button>
+            <button class="dashboard__tab" role="tab" aria-selected="false" data-tab-target="settings">Settings</button>
+        </div>
+
+        <div class="dashboard__content">
+            <section class="dashboard__section" data-tab-panel="cities">
+                <form id="city-search-form" class="dashboard__form">
+                    <label for="city-search-input">Search for a city</label>
+                    <div class="form-row">
+                        <input id="city-search-input" name="query" type="text" placeholder="Start typing a city name..." autocomplete="off" required />
+                        <button type="submit" class="primary">Search</button>
+                    </div>
+                </form>
+                <div id="city-search-results" class="card-list" aria-live="polite"></div>
+
+                <div class="section-heading">
+                    <p>Saved cities</p>
+                    <button id="refresh-cities" class="icon-button" title="Refresh saved cities list" aria-label="Refresh saved cities">↻</button>
+                </div>
+                <div id="saved-cities" class="card-list" aria-live="polite"></div>
+                <p class="inline-error" id="city-action-error" role="status"></p>
+            </section>
+
+            <section class="dashboard__section hidden" data-tab-panel="settings">
+                <form id="settings-form" class="dashboard__form">
+                    <label for="unitPreference">Temperature units</label>
+                    <select id="unitPreference" name="unitPreference">
+                        <option value="metric">Celsius (Metric)</option>
+                        <option value="us">Fahrenheit (US)</option>
+                    </select>
+
+                    <label class="checkbox-row">
+                        <input type="checkbox" name="emailAlerts" id="emailAlerts" />
+                        <span>Send me severe weather email alerts</span>
+                    </label>
+
+                    <label class="checkbox-row">
+                        <input type="checkbox" name="shareAnalytics" id="shareAnalytics" />
+                        <span>Help improve the app by sharing anonymous analytics</span>
+                    </label>
+
+                    <div class="form-row spaced">
+                        <button type="submit" class="primary">Save settings</button>
+                        <p id="settings-status" class="muted" role="status"></p>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
 </div>
 
 <script type="module" src="/src/main.js"></script>
