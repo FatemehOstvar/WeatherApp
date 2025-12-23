@@ -2,6 +2,7 @@ import "./style.css";
 import { Logger } from "./Logger.js";
 import { Extractor } from "./Extractor.js";
 import { Organizer } from "./Organizer.js";
+import { AuthService } from "./AuthService.js";
 
 class Main {
   constructor() {
@@ -13,15 +14,97 @@ class Main {
       // uk: " °C",
       // base: " K",
     };
+    this.logger = null;
+    this.extractor = null;
+    this.organizer = null;
+    this.hasBoundWeatherEvents = false;
+    this.authService = new AuthService();
+    this.authMessage = document.querySelector("#auth-message");
+    this.app = document.querySelector("#app");
+    this.loginForm = document.querySelector("#auth-form");
+    this.registerButton = document.querySelector("#register-btn");
+    this.logoutButton = document.querySelector("#logout-btn");
+    this.statusEmail = document.querySelector("#auth-user");
     this.initialize();
   }
 
-  initialize() {
-    this.SetCity();
-    this.toggleUnit();
-    this.logger = new Logger();
+  async initialize() {
+    this.bindAuthHandlers();
+    const restored = await this.authService.restoreSession();
+    if (restored) {
+      await this.enableWeather();
+    } else {
+      this.disableWeather("Sign in to view your forecast.");
+    }
+  }
+
+  bindAuthHandlers() {
+    this.loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const formData = new FormData(this.loginForm);
+      const payload = {
+        email: formData.get("email"),
+        password: formData.get("password"),
+      };
+
+      try {
+        await this.authService.login(payload);
+        this.showAuthMessage("Signed in successfully.");
+        await this.enableWeather();
+      } catch (error) {
+        this.disableWeather(error.message);
+      }
+    });
+
+    this.registerButton.addEventListener("click", async () => {
+      const formData = new FormData(this.loginForm);
+      const payload = {
+        email: formData.get("email"),
+        password: formData.get("password"),
+        name: formData.get("name"),
+      };
+
+      try {
+        await this.authService.register(payload);
+        this.showAuthMessage("Account created and signed in.");
+        await this.enableWeather();
+      } catch (error) {
+        this.disableWeather(error.message);
+      }
+    });
+
+    this.logoutButton.addEventListener("click", () => {
+      this.authService.logout();
+      this.disableWeather("You have been signed out.");
+    });
+  }
+
+  async enableWeather() {
+    this.app.hidden = false;
+    this.logoutButton.hidden = false;
+    this.statusEmail.textContent = this.authService.user?.email ?? "";
+
+    if (!this.hasBoundWeatherEvents) {
+      this.SetCity();
+      this.toggleUnit();
+      this.logger = new Logger();
+      this.organizer = new Organizer();
+      this.hasBoundWeatherEvents = true;
+    }
+
     this.extractor = new Extractor(this.enteredCity, this.unit);
-    this.organizer = new Organizer();
+    await this.display();
+  }
+
+  disableWeather(message) {
+    this.app.hidden = true;
+    this.logoutButton.hidden = true;
+    this.statusEmail.textContent = "";
+    this.showAuthMessage(message);
+  }
+
+  showAuthMessage(message) {
+    this.authMessage.textContent = message;
   }
 
   SetCity() {
@@ -34,6 +117,10 @@ class Main {
   }
 
   async display() {
+    if (!this.authService.isAuthenticated()) {
+      this.disableWeather("Please sign in to load weather data.");
+      return;
+    }
     this.logger.logCity(this.enteredCity);
     await this.extractor.extract();
     const currentDataText = this.organizer.organize(

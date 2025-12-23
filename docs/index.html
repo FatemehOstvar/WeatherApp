@@ -5,12 +5,37 @@
     <!--    <link rel="icon" type="image/svg+xml" href="/vite.svg"/>-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Weather App</title>
-  <script type="module" crossorigin src="/WeatherApp/assets/index-VZR57pq4.js"></script>
-  <link rel="stylesheet" crossorigin href="/WeatherApp/assets/index-D8slI6K5.css">
+  <script type="module" crossorigin src="/WeatherApp/assets/index-B3s-spl0.js"></script>
+  <link rel="stylesheet" crossorigin href="/WeatherApp/assets/index-DtlD2EKa.css">
 </head>
 <body>
 <header></header>
-<div id="app">
+<main>
+    <section id="auth">
+        <h2>Account</h2>
+        <form id="auth-form">
+            <label>
+                Name
+                <input name="name" type="text" placeholder="Your name">
+            </label>
+            <label>
+                Email
+                <input name="email" type="email" placeholder="you@example.com" required>
+            </label>
+            <label>
+                Password
+                <input name="password" type="password" placeholder="••••••••" required>
+            </label>
+            <div class="auth-actions">
+                <button type="submit">Sign in</button>
+                <button type="button" id="register-btn">Register</button>
+                <button type="button" id="logout-btn" hidden>Logout</button>
+            </div>
+        </form>
+        <p id="auth-message" aria-live="polite"></p>
+        <p id="auth-user"></p>
+    </section>
+    <div id="app" hidden>
     <p id = 'city'></p>
     <!--    <form>-->
     <!--        <label for="enteredCity"></label>-->
@@ -248,6 +273,7 @@
         </div>
     </section>
 </div>
+</main>
 
 </body>
 </html>

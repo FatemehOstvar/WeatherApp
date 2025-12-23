@@ -8,7 +8,32 @@
 </head>
 <body>
 <header></header>
-<div id="app">
+<main>
+    <section id="auth">
+        <h2>Account</h2>
+        <form id="auth-form">
+            <label>
+                Name
+                <input name="name" type="text" placeholder="Your name">
+            </label>
+            <label>
+                Email
+                <input name="email" type="email" placeholder="you@example.com" required>
+            </label>
+            <label>
+                Password
+                <input name="password" type="password" placeholder="••••••••" required>
+            </label>
+            <div class="auth-actions">
+                <button type="submit">Sign in</button>
+                <button type="button" id="register-btn">Register</button>
+                <button type="button" id="logout-btn" hidden>Logout</button>
+            </div>
+        </form>
+        <p id="auth-message" aria-live="polite"></p>
+        <p id="auth-user"></p>
+    </section>
+    <div id="app" hidden>
     <p id = 'city'></p>
     <!--    <form>-->
     <!--        <label for="enteredCity"></label>-->
@@ -246,6 +271,7 @@
         </div>
     </section>
 </div>
+</main>
 
 <script type="module" src="/src/main.js"></script>
 </body>

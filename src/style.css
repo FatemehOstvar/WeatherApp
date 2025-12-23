@@ -161,3 +161,26 @@ button[name="change-city"] {
 .conds {
     padding: 1.1rem;
 }
+
+#auth {
+    background-color: var(--bg-color2);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    max-width: 480px;
+}
+
+#auth-form {
+    display: grid;
+    gap: 0.75rem;
+}
+
+#auth label {
+    display: grid;
+    gap: 0.3rem;
+}
+
+.auth-actions {
+    display: flex;
+    gap: 0.5rem;
+}
