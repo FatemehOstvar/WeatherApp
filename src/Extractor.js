@@ -8,9 +8,19 @@ export class Extractor {
   }
 
   async extract() {
+    const apiKey = import.meta.env.VITE_VISUAL_CROSSING_KEY;
+    if (!apiKey) {
+      throw new Error("VITE_VISUAL_CROSSING_KEY is not configured.");
+    }
+
     const temperature = await fetch(
-      `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${this.city}?unitGroup=${this.unit}&key=E47KCVVZKD5PP9P3WD2KRQFDC`,
+      `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${this.city}?unitGroup=${this.unit}&key=${apiKey}`,
     );
+    if (!temperature.ok) {
+      throw new Error(
+        `Unable to fetch forecast for ${this.city} (${temperature.status})`,
+      );
+    }
     this.data = await temperature.json();
   }
 
@@ -75,7 +85,7 @@ export class Extractor {
         icon: hours[i]["icon"],
         uvindex: hours[i]["uvindex"],
         temp: Math.round(hours[i]["temp"]),
-        conditions: hours[i]["consditions"],
+        conditions: hours[i]["conditions"],
       };
     });
   }
