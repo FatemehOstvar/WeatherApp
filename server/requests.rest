@@ -1,0 +1,55 @@
+
+###
+POST http://localhost:4000/register
+Content-Type: application/json
+
+{
+  "username": "johndoe",
+  "firstName": "johndoe",
+  "lastName": "boltico",
+  "role": "spectator",
+  "password": "fvW$tat5E"
+}
+
+###
+
+POST http://localhost:4000/login
+content-Type: application/json
+
+{
+  "username": "johndoe",
+  "password": "fvW$tat5E"
+}
+
+###
+GET http://localhost:3006/api/key
+
+###
+
+POST http://localhost:4000/login
+content-Type: application/json
+
+{
+  "username": "fatemehostvar2005@gmail.com",
+  "password": "logintry!D2"
+}
+
+###
+
+POST http://localhost:4000/register
+Content-Type: application/json
+
+{
+  "username": "sample",
+  "firstName": "johndoe",
+  "lastName": "boltico",
+  "role": "spectator",
+  "password": "logintry!D2"
+}
+
+###
+GET http://localhost:3006/api/role
+Content-Type: application/json
+Origin: http://localhost:5273
+
+
