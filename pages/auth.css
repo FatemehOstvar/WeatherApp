@@ -1,4 +1,3 @@
-/* Reset */
 *,
 *::before,
 *::after {
@@ -58,13 +57,11 @@ body {
     }
 }
 
-/* Remove motion everywhere (even if you later add transitions) */
 * {
     transition: none !important;
     animation: none !important;
 }
 
-/* Card (works for #login and #signup) */
 #login,
 #signup {
     width: min(520px, 92vw);
