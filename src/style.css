@@ -54,7 +54,7 @@ body {
         --muted-2: rgb(226 232 240 / 55%);
         --shadow: 0 18px 50px rgb(0 0 0 / 38%);
         --icon-btn: rgb(15 23 42 / 70%);
-        --icon-btn-hover: rgb(15 23 42 / 90%);
+        --icon-btn-hover: rgb(232 80 250);
     }
 }
 
@@ -171,12 +171,12 @@ button[name="change-city"],
 
 [name="account"],
 button[name="change-city"],
-#thermometer {
+#thermometer, button[name="addAddCitySVG"] {
     position: absolute;
     top: 12px;
     width: 44px;
     height: 44px;
-    padding: 0;
+    padding: 3px;
     place-items: center;
     border-radius: 14px;
     border: 1px solid var(--border);
@@ -187,7 +187,7 @@ button[name="change-city"],
 }
 
 [name="account"], #thermometer,
-button[name="change-city"] {
+button[name="change-city"], button[name="addAddCitySVG"] {
     position: relative;
     height: auto;
     margin-bottom: var(--pad-x);
@@ -195,7 +195,7 @@ button[name="change-city"] {
 
 [name="account"]:hover,
 button[name="change-city"]:hover,
-#thermometer:hover {
+#thermometer:hover, button[name="addAddCitySVG"]:hover {
     background: var(--icon-btn-hover);
     border-color: rgb(148 163 184 / 35%);
     transform: translateY(-1px);
@@ -203,14 +203,14 @@ button[name="change-city"]:hover,
 
 [name="account"]:focus-visible,
 button[name="change-city"]:focus-visible,
-#thermometer:focus-visible {
+#thermometer:focus-visible, button[name="addAddCitySVG"]:focus-visible {
     outline: 3px solid rgb(59 130 246 / 35%);
     outline-offset: 2px;
 }
 
 button svg {
-    width: 22px;
-    height: 22px;
+    width: 32px;
+    height: 42px;
     display: block;
     fill: currentcolor;
     color: currentcolor;
@@ -219,6 +219,7 @@ button svg {
 button svg * {
     fill: currentcolor;
     stroke: currentcolor;
+
 }
 
 /* Respect "none" */
@@ -245,7 +246,7 @@ button svg path[stroke="none"] {
 @media (width >= 920px) {
     #current {
         grid-template-columns: 380px 1fr;
-        align-items: start;
+        align-items: center;
     }
 }
 
@@ -254,7 +255,7 @@ button svg path[stroke="none"] {
     border: 1px solid var(--border);
     background: var(--panel);
     border-radius: var(--radius);
-    padding: 16px 18px;
+    padding: 40px;
     box-shadow: var(--shadow);
     display: flex;
     gap: 14px;

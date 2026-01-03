@@ -9,7 +9,14 @@ class Main {
     const params = new URLSearchParams(window.location.search);
     const fromUrl = params.get("city");
     const fromLS = localStorage.getItem("selectedCity");
-    this.enteredCity = fromUrl ?? fromLS ?? "Rasht";
+    const toTitleCase = (s) =>
+      s
+        .trim()
+        .toLowerCase()
+        .replace(/\b\p{L}/gu, (ch) => ch.toUpperCase());
+
+    const entered = fromUrl ?? fromLS ?? "Rasht";
+    this.enteredCity = toTitleCase(entered);
 
     this.sign = {
       metric: " °C",
@@ -24,6 +31,7 @@ class Main {
     this.role = await this.getRole();
     await this.setAccount();
     this.SetCity();
+    this.addAddCitySVG();
     this.toggleUnit();
     this.logger = new Logger();
     this.extractor = new Extractor(this.enteredCity, this.unit);
@@ -42,6 +50,21 @@ class Main {
       this.enteredCity = prompt("City?");
       this.extractor = new Extractor(this.enteredCity, this.unit);
       await this.display();
+    });
+  }
+
+  addAddCitySVG() {
+    const btn = document.querySelector('button[name="addAddCitySVG"]');
+    btn.addEventListener("click", async () => {
+      await fetch("http://localhost:3006/api/cities", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: { city_name: this.enteredCity },
+      });
     });
   }
 
@@ -96,7 +119,6 @@ class Main {
     this.logger.logCurrent(currentDataText[0], this.sign[this.unit]);
     await this.logger.log(dailyDataText, "daily", this.sign[this.unit]);
     await this.logger.log(hourlyDataText, "hourly", this.sign[this.unit]);
-    console.log(typeof currentDataText[0][1][1]);
     await this.logger.logWeatherAsBG(currentDataText[0][1][1]);
   }
 
@@ -116,7 +138,6 @@ class Main {
       '<svg width="40px" height="40px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg"\n' +
       "        >\n" +
       "\n" +
-      "            <title>thermometer_f [#746]</title>\n" +
       "            <desc>Created with Sketch.</desc>\n" +
       "            <defs>\n" +
       "\n" +
@@ -136,7 +157,6 @@ class Main {
     const Cbtn =
       '<svg width="40px" height="40px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\n' +
       "    \n" +
-      "    <title>thermometer_c [#745]</title>\n" +
       "    <desc>Created with Sketch.</desc>\n" +
       "    <defs>\n" +
       "\n" +
