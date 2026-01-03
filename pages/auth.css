@@ -1,0 +1,181 @@
+/* Reset */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    scrollbar-gutter: stable;
+}
+
+body {
+    margin: 0;
+    min-height: 100dvh;
+    padding: 24px;
+
+    /* stable centering */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    background: var(--page-bg);
+    color: var(--text);
+}
+
+/* Theme tokens (light default) */
+:root {
+    --page-bg: #f6f7fb;
+    --surface: #fff;
+    --surface-2: #f8fafc;
+    --border: rgb(15 23 42 / 12%);
+    --text: #0f172a;
+    --muted: rgb(15 23 42 / 72%);
+    --radius: 18px;
+    --shadow: 0 12px 34px rgb(15 23 42 / 10%);
+    --focus: rgb(59 130 246 / 35%);
+    --danger-border: rgb(239 68 68 / 35%);
+    --danger-bg: rgb(239 68 68 / 10%);
+    --danger-text: #b91c1c;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --page-bg: #0b1220;
+        --surface: #0f172a;
+        --surface-2: #111c33;
+        --border: rgb(148 163 184 / 16%);
+        --text: #e5e7eb;
+        --muted: rgb(226 232 240 / 78%);
+        --shadow: 0 18px 50px rgb(0 0 0 / 38%);
+        --danger-text: #fecaca;
+        --danger-bg: rgb(239 68 68 / 14%);
+    }
+}
+
+/* Remove motion everywhere (even if you later add transitions) */
+* {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Card (works for #login and #signup) */
+#login,
+#signup {
+    width: min(520px, 92vw);
+    margin: 0;
+    padding: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+/* Title (first <p> inside the card) */
+#login > p,
+#signup > p {
+    margin: 0 0 12px;
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    text-transform: capitalize;
+}
+
+/* Form */
+#loginForm,
+#signupForm {
+    display: grid;
+    gap: 12px;
+}
+
+#loginForm label,
+#signupForm label {
+    display: grid;
+    gap: 6px;
+    font-weight: 800;
+    color: var(--muted);
+    text-transform: capitalize;
+}
+
+/* Inputs */
+#loginForm input,
+#signupForm input {
+    height: 44px;
+    padding: 0 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    font: inherit;
+    outline: none;
+}
+
+#loginForm input:focus-visible,
+#signupForm input:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    background: var(--surface);
+}
+
+
+#loginForm button[type="submit"],
+#signupForm button[type="submit"] {
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--text);
+    color: var(--surface);
+    font-weight: 900;
+    cursor: pointer;
+}
+
+#loginForm button[type="submit"]:focus-visible,
+#signupForm button[type="submit"]:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+}
+
+/* Error boxes (stable: reserve space so layout never moves) */
+#error,
+#signupError {
+    margin-top: 10px;
+    min-height: 44px; /* reserve space => no jump */
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--danger-border);
+    background: var(--danger-bg);
+    color: var(--danger-text);
+    font-weight: 800;
+    visibility: hidden; /* hidden when empty */
+}
+
+#error:not(:empty),
+#signupError:not(:empty) {
+    visibility: visible;
+}
+
+/* Footer links */
+body > a {
+    display: inline-block;
+    margin: 0;
+    padding: 10px 14px;
+    border-radius: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 800;
+}
+
+
+/* Optional: reduce link clutter on very small screens */
+@media (width <= 420px) {
+    body {
+        padding: 18px;
+    }
+
+
+}
