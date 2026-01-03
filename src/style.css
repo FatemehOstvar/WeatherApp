@@ -164,6 +164,8 @@ button,
 button[name="change-city"],
 #thermometer {
     font: inherit;
+    background: none;
+    border: none;
     color: var(--text);
 }
 
@@ -175,7 +177,6 @@ button[name="change-city"],
     width: 44px;
     height: 44px;
     padding: 0;
-    display: grid;
     place-items: center;
     border-radius: 14px;
     border: 1px solid var(--border);
@@ -185,16 +186,11 @@ button[name="change-city"],
     transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
 }
 
-[name="account"] {
-    right: var(--pad-x);
-}
-
+[name="account"], #thermometer,
 button[name="change-city"] {
-    right: calc(var(--pad-x) + 44px + 10px);
-}
-
-#thermometer {
-    right: calc(var(--pad-x) + (44px + 10px) * 2);
+    position: relative;
+    height: auto;
+    margin-bottom: var(--pad-x);
 }
 
 [name="account"]:hover,
