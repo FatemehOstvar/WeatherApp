@@ -68,3 +68,19 @@ async function loadCities() {
 }
 
 loadCities();
+
+function listenForSignOut() {
+  const logout = document.querySelector("#logout");
+
+  logout.addEventListener("click", async () => {
+    const res = await fetch("http://localhost:4000/token/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+    if (res.ok) {
+      window.location = "./index.html";
+    }
+  });
+}
+
+listenForSignOut();

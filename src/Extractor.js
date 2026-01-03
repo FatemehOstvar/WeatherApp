@@ -55,37 +55,25 @@ export class Extractor {
     });
   }
 
-  // should return an array of size 24
   async extractHourly() {
-    let hours = [
-      ...(await this.data["days"][0]["hours"]),
-      ...(await this.data["days"][1]["hours"]),
-    ];
-    let time = await this.data["currentConditions"]["datetime"].split(":")[0];
-    let starter;
-    if (parseInt(time) === 23) {
-      starter = 0;
-    } else {
-      for (let i = 0; i < 48; i++) {
-        if (hours[i]["datetime"] > time) {
-          starter = i;
-          break;
-        }
-      }
-    }
-    hours = hours.slice(starter, 24 + starter);
+    let hours = [...this.data.days[0].hours, ...this.data.days[1].hours];
+    let now = this.data["currentConditions"]["datetimeEpoch"];
+    const nowHour = Math.floor(now / 3600) * 3600;
 
-    return Array.from({ length: hours.length }).map((_, i) => {
-      return {
-        hour: parseInt(hours[i]["datetime"].split(":")[0]),
-        "real feel": hours[i]["feelslike"],
-        humidity: hours[i]["humidity"],
-        icon: hours[i]["icon"],
-        uvindex: hours[i]["uvindex"],
-        temp: Math.round(hours[i]["temp"]),
-        conditions: hours[i]["consditions"],
-      };
-    });
+    let starter = hours.findIndex((h) => h.datetimeEpoch >= nowHour);
+    if (starter < 0) starter = 0;
+
+    const slice = hours.slice(starter, starter + 24);
+
+    return slice.map((h) => ({
+      hour: parseInt(h.datetime.split(":")[0], 10),
+      "real feel": h.feelslike,
+      humidity: h.humidity,
+      icon: h.icon,
+      uvindex: h.uvindex,
+      temp: Math.round(h.temp),
+      conditions: h.conditions, // <- also fix your typo if you use it
+    }));
   }
 }
 

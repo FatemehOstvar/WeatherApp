@@ -47,7 +47,7 @@ class Main {
   //     await this.display();
   //   });
   // }
-  async SetCity() {
+  SetCity() {
     const btn = document.querySelector('button[name="change-city"]');
 
     btn.innerHTML = `<svg  height="40px" width="40px" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
@@ -127,8 +127,8 @@ class Main {
         alert(`Failed to save city: ${res.status} ${msg}`);
         return;
       }
-
-      btn.style.color = "rgb(232 80 250)";
+      const svg = document.querySelector('button[name="addAddCitySVG"]>svg');
+      svg.style = "background: rgb(232 80 250)";
     });
   }
 

@@ -8,7 +8,20 @@
     <link rel="stylesheet" href="./cities.css"/>
 </head>
 <body>
-<h1>All Cities</h1>
+<!--<h1>Settings</h1>-->
+<!--<h2>Logout</h2>-->
+<div id="accountContainer">
+<h2 class="card__title">Account</h2>
+
+<div class="row">
+    <div class="row__text">
+        <p class="row__label">Sign out</p>
+        <p class="row__hint">Log out from this device</p>
+    </div>
+    <button class="btn btn--danger" id="logout" type="button">Sign out</button>
+</div>
+</div>
+<h2 class="card__title">Cities</h2>
 
 <div id="cities-container" aria-busy="true">Loading…</div>
 <p id="cities-error" hidden></p>

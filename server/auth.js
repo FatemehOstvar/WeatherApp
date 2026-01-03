@@ -23,7 +23,7 @@ app.use(
 );
 
 let refreshTokens = []; // demo-only (in-memory)
-
+// TODO Store refresh tokens in DB or rotate tokens properly.
 const validateUser = [
   body("firstName")
     .trim()
@@ -199,7 +199,7 @@ app.post("/register", ...register);
 app.post("/login", logIn);
 
 app.post("/token/logout", (req, res) => {
-  const refreshToken = req.cookie["refreshToken"];
+  const refreshToken = req.cookies["refreshToken"];
   refreshTokens = refreshTokens.filter((t) => t !== refreshToken);
   res.clearCookie("accessToken", { path: "/" });
   res.clearCookie("refreshToken", { path: "/token" });
@@ -207,7 +207,6 @@ app.post("/token/logout", (req, res) => {
   return res.sendStatus(204);
 });
 
-// Optional: basic error handler so next(err) returns JSON
 app.use((err, req, res, next) => {
   console.error(err);
   return res.status(500).json({ msg: "Server error" });
