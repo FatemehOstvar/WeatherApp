@@ -17,7 +17,8 @@ async function populate() {
     console.log("Starting database setup...");
     await pool.query("BEGIN");
 
-    // Create enum type for roles (idempotent)
+
+
     await pool.query(`
       DO $$
       BEGIN
@@ -31,7 +32,7 @@ async function populate() {
       END $$;
     `);
 
-    // Create users table (idempotent)
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users
       (
@@ -60,7 +61,8 @@ async function populate() {
         );
     `);
 
-    // Create user_city table (idempotent)
+
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS user_city
       (
@@ -82,12 +84,6 @@ async function populate() {
       )
         );
     `);
-
-    // If you are sure the PK is defined above, you do NOT need this:
-    // await pool.query(`
-    //   ALTER TABLE user_city
-    //   ADD PRIMARY KEY (user_id, city_name);
-    // `);
 
     await pool.query("COMMIT");
     console.log("Database setup completed successfully.");

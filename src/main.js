@@ -6,17 +6,23 @@ import { Organizer } from "./Organizer.js";
 class Main {
   constructor() {
     this.unit = "metric";
-    this.enteredCity = "Rasht";
+    const params = new URLSearchParams(window.location.search);
+    const fromUrl = params.get("city");
+    const fromLS = localStorage.getItem("selectedCity");
+    this.enteredCity = fromUrl ?? fromLS ?? "Rasht";
+
     this.sign = {
       metric: " °C",
       us: " °F",
       // uk: " °C",
       // base: " K",
     };
-    this.initialize();
+    this.role = "spectator";
   }
 
-  initialize() {
+  async initialize() {
+    this.role = await this.getRole();
+    await this.setAccount();
     this.SetCity();
     this.toggleUnit();
     this.logger = new Logger();
@@ -26,10 +32,51 @@ class Main {
 
   SetCity() {
     const btn = document.querySelector('button[name="change-city"]');
-    btn.addEventListener("click", async (event) => {
+    btn.innerHTML = `<svg fill="#000000" height="40px" width="40px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 264.018 264.018" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+            <g id="SVGRepo_iconCarrier"> <g> <path
+                    d="M132.009,0c-42.66,0-77.366,34.706-77.366,77.366c0,11.634,2.52,22.815,7.488,33.24c0.1,0.223,0.205,0.442,0.317,0.661 l58.454,113.179c2.146,4.154,6.431,6.764,11.106,6.764c4.676,0,8.961-2.609,11.106-6.764l58.438-113.148 c0.101-0.195,0.195-0.392,0.285-0.591c5.001-10.455,7.536-21.67,7.536-33.341C209.375,34.706,174.669,0,132.009,0z M132.009,117.861c-22.329,0-40.495-18.166-40.495-40.495c0-22.328,18.166-40.494,40.495-40.494s40.495,18.166,40.495,40.494 C172.504,99.695,154.338,117.861,132.009,117.861z"></path>
+                <path d="M161.81,249.018h-59.602c-4.143,0-7.5,3.357-7.5,7.5c0,4.143,3.357,7.5,7.5,7.5h59.602c4.143,0,7.5-3.357,7.5-7.5 C169.31,252.375,165.952,249.018,161.81,249.018z"></path> </g> </g></svg>`;
+    btn.addEventListener("click", async () => {
       this.enteredCity = prompt("City?");
       this.extractor = new Extractor(this.enteredCity, this.unit);
       await this.display();
+    });
+  }
+
+  async getRole() {
+    try {
+      const res = await fetch("http://localhost:3006/api/role", {
+        method: "GET",
+        credentials: "include",
+        headers: { Accept: "application/json" },
+      });
+      if (!res.ok) {
+        return "spectator";
+      }
+      const data = await res.json(); // the data is coming as spectator after login
+
+      return data?.role ?? "spectator";
+    } catch {
+      return "spectator";
+    }
+  }
+
+  async setAccount() {
+    const btn = document.querySelector('button[name="account"]');
+
+    btn.addEventListener("click", async () => {
+      alert(this.role);
+      if (this.role === "user") {
+        window.location.href = "/pages/cities.html";
+        console.log("user\n\n");
+      } else if (this.role === "admin") {
+        window.location.href = "/pages/cities.html";
+        console.log("admin\n\n");
+      } else {
+        window.location.href = "/pages/signup.html";
+      }
     });
   }
 
@@ -110,5 +157,8 @@ class Main {
   }
 }
 
-const main = new Main();
-await main.display();
+(async () => {
+  const main = new Main();
+  await main.initialize();
+  await main.display();
+})();

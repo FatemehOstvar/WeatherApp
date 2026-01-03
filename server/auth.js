@@ -5,18 +5,20 @@ const db = require("./db/queries");
 const bcrypt = require("bcryptjs");
 const cors = require("cors");
 require("dotenv").config({ path: __dirname + "/.env" });
+const cookieParser = require("cookie-parser");
 
 const app = express();
 const PORT = process.env.PORT;
-
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use(
   cors({
     origin: "http://localhost:5173",
+    credentials: true,
     methods: ["GET", "POST", "PUT", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type"], //not needed , "Authorization"
   }),
 );
 
@@ -63,6 +65,26 @@ const validateUser = [
     .withMessage("Username can only contain letters and numbers"),
 ];
 
+function setAuthCookies(res, accessToken, refreshToken) {
+  const common = {
+    httpOnly: true,
+    secure: false,
+    sameSite: "strict",
+  };
+
+  res.cookie("accessToken", accessToken, {
+    ...common,
+    path: "/",
+    maxAge: 15 * 60 * 1000, // 15 min
+  });
+
+  res.cookie("refreshToken", refreshToken, {
+    ...common,
+    path: "/token",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  });
+}
+
 const register = [
   validateUser,
   async (req, res, next) => {
@@ -77,20 +99,31 @@ const register = [
         return res.status(409).json({ msg: "Username exists" });
       }
 
-      await db.addUser(req.body);
+      await db.addUser({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        username: req.body.username,
+        password: req.body.password,
+      });
 
       const user = await db.findByUsername(req.body.username);
+      await db.upgradeRole(user.id);
+
       if (!user) {
         return res.status(500).json({ msg: "Unable to create user" });
       }
 
-      const payload = { name: user.username };
+      const payload = { id: user.id, username: user.username, role: user.role };
       const accessToken = generateAccessToken(payload);
       const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN);
 
+      console.log(accessToken);
       refreshTokens.push(refreshToken);
-
-      return res.json({ accessToken, refreshToken });
+      //TODO set cookie
+      setAuthCookies(res, accessToken, refreshToken);
+      return res.json({
+        msg: "Successfully registered user",
+      });
     } catch (err) {
       return next(err);
     }
@@ -115,21 +148,23 @@ async function logIn(req, res, next) {
       return res.status(401).json({ msg: "Invalid credentials" });
     }
 
-    const payload = { name: username };
+    const payload = { id: user.id, username: user.username, role: user.role };
     const accessToken = generateAccessToken(payload);
     const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN);
-
+    console.log(accessToken);
     refreshTokens.push(refreshToken);
-
-    return res.json({ accessToken, refreshToken });
+    setAuthCookies(res, accessToken, refreshToken);
+    return res.json({ msg: "successfully logged in" });
   } catch (err) {
     return next(err);
   }
 }
 
+//TODO make this automatic in front end req
 // Refresh access token using refresh token
+
 app.post("/token", (req, res) => {
-  const refreshToken = req.body?.token;
+  const refreshToken = req.cookies["refreshToken"];
 
   if (!refreshToken) {
     return res.status(401).json({ msg: "Missing refresh token" });
@@ -139,15 +174,20 @@ app.post("/token", (req, res) => {
     return res.status(403).json({ msg: "Refresh token invalid" });
   }
 
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, decoded) => {
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN, async (err, decoded) => {
     if (err) {
       return res.status(403).json({ msg: "Refresh token expired" });
     }
 
-    // you signed { name: ... }, so decoded.name exists
-    const accessToken = generateAccessToken({ name: decoded.name });
-
-    return res.json({ accessToken });
+    const user = await db.findByUsername(decoded.username);
+    const accessToken = generateAccessToken({
+      id: user.id,
+      username: user.username,
+      role: user.role,
+    });
+    // TODO save access token in cookie
+    setAuthCookies(res, accessToken, refreshToken);
+    return res.json({ msg: "token generated" });
   });
 });
 
@@ -161,9 +201,12 @@ function generateAccessToken(user) {
 app.post("/register", ...register);
 app.post("/login", logIn);
 
-app.delete("/logout", (req, res) => {
-  const token = req.body?.token;
-  refreshTokens = refreshTokens.filter((t) => t !== token);
+app.post("/token/logout", (req, res) => {
+  const refreshToken = req.cookie["refreshToken"];
+  refreshTokens = refreshTokens.filter((t) => t !== refreshToken);
+  res.clearCookie("accessToken", { path: "/" });
+  res.clearCookie("refreshToken", { path: "/token" });
+
   return res.sendStatus(204);
 });
 

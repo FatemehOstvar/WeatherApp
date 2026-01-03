@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Settings</title>
+
+    <link rel="stylesheet" href="./settings.css"/>
+</head>
+<body>
+<main class="page">
+    <header class="page__header">
+        <h1 class="page__title">Settings</h1>
+        <p class="page__subtitle">Manage your preferences</p>
+    </header>
+
+    <section class="card" aria-label="Appearance">
+        <h2 class="card__title">Appearance</h2>
+
+        <div class="row">
+            <div class="row__text">
+                <p class="row__label">Theme</p>
+                <p class="row__hint">Light or Dark</p>
+            </div>
+            <select class="control" id="theme">
+                <option value="system">System</option>
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+            </select>
+        </div>
+    </section>
+
+    <section class="card" aria-label="Units">
+        <h2 class="card__title">Units</h2>
+
+        <div class="row">
+            <div class="row__text">
+                <p class="row__label">Temperature</p>
+                <p class="row__hint">Celsius or Fahrenheit</p>
+            </div>
+            <div class="segmented" role="group" aria-label="Temperature unit">
+                <button class="segmented__btn" data-unit="metric" type="button">°C</button>
+                <button class="segmented__btn" data-unit="us" type="button">°F</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="card" aria-label="Account">
+        <h2 class="card__title">Account</h2>
+
+        <div class="row">
+            <div class="row__text">
+                <p class="row__label">Sign out</p>
+                <p class="row__hint">Log out from this device</p>
+            </div>
+            <button class="btn btn--danger" id="logout" type="button">Sign out</button>
+        </div>
+    </section>
+</main>
+
+<script type="module" src="../src/settings.js"></script>
+</body>
+</html>

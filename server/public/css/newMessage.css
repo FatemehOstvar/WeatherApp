@@ -1,0 +1,82 @@
+body{
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+
+  place-items: start center;
+  align-content: start;
+  padding: 32px 16px;
+  color: #0f172a;
+  background-color: #cfece4; /* matches your theme1 */
+}
+
+/* error partial */
+.errors{
+  color: #ff3f3f;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+/* form card */
+form[method="post"]{
+  width: 100%;
+  max-width: 660px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0px 10px 30px #00000014;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* labels */
+form[method="post"] label{
+  font-weight: 700;
+  text-transform: capitalize;
+  color: #334155;
+}
+
+/* inputs */
+form[method="post"] input, form[method="post"] textarea{
+  width: 95%;
+  padding: 13px 14px;
+  border: 1px solid #0f172a2e;
+  border-radius: 10px;
+  outline: none;
+}
+
+form[method="post"] input:focus{
+  border-color: #0f172a59;
+}
+
+/* submit button */
+form[method="post"] button[type="submit"]{
+  margin-top: 4px;
+  padding: 14px 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 800;
+  background-color: #67c5b7;
+  color: #0f172a;
+}
+
+form[method="post"] button[type="submit"]:hover{
+  filter: brightness(0.96);
+}
+
+/* back link (the lone <a> after the form) */
+body > a{
+  margin-top: 16px;
+  text-decoration: none;
+  font-weight: 700;
+  color: #0f172a;
+  opacity: 0.85;
+}
+
+body > a:hover{
+  opacity: 1;
+  text-decoration: underline;
+}

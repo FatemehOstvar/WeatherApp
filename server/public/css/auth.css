@@ -1,0 +1,189 @@
+:root{
+  --bg: #e9fbf7;
+  --card: #ffffff;
+  --text: #172554;
+  --muted: #475569;
+  --border: #1725541f;
+  --shadow: #00000014;
+  --primary: #7ad9c8;
+  --primary2: #ffd6e7;
+  --danger: #ff5a7a;
+  --chip: #f3f9ff;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 600px at 15% 10%, #ffffff 0%, #ffffff00 55%),
+    radial-gradient(900px 600px at 85% 20%, #ffd6e7a6 0%, #ffffff00 55%),
+    radial-gradient(900px 600px at 30% 90%, #7ad9c866 0%, #ffffff00 55%),
+    var(--bg);
+  color: var(--text);
+  font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  padding: 28px 16px;
+  display: grid;
+  place-items: start center;
+  align-content: start;
+}
+.errors{
+  min-height: 48px;
+  visibility: hidden;
+}
+
+.errors:not(:empty){
+  visibility: visible;
+}
+
+.errors{
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto 12px auto;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background-color: #ffffff;
+  color: var(--danger);
+  font-weight: 900;
+  box-shadow: 0px 12px 30px var(--shadow);
+  border: 1px solid #ff5a7a33;
+  white-space: pre-line;
+}
+
+form[action="/login"],
+form[action="/sign-up"]{
+  width: 100%;
+  max-width: 520px;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 65%, #f7fffe 100%);
+  border-radius: 22px;
+  padding: 18px 16px 16px 16px;
+  box-shadow: 0px 16px 38px var(--shadow);
+  border: 1px solid #ffffff;
+  display: grid;
+  gap: 12px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+form[action="/login"]::after,
+form[action="/sign-up"]::after{
+  content: "";
+  position: absolute;
+  inset: -60px -60px auto auto;
+  width: 220px;
+  height: 220px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, var(--primary2) 0%, #ffd6e700 60%);
+  pointer-events: none;
+}
+
+form[action="/login"]::before{
+  content: "Login";
+  display: block;
+  font-size: 22px;
+  font-weight: 1000;
+  letter-spacing: -0.03em;
+  margin-bottom: 2px;
+  position: relative;
+}
+
+form[action="/sign-up"]::before{
+  content: "Sign up";
+  display: block;
+  font-size: 22px;
+  font-weight: 1000;
+  letter-spacing: -0.03em;
+  margin-bottom: 2px;
+  position: relative;
+}
+
+label{
+  display: grid;
+  gap: 8px;
+  font-weight: 900;
+  color: var(--muted);
+  text-transform: capitalize;
+  position: relative;
+}
+
+input{
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  outline: none;
+  background-color: #ffffff;
+  color: var(--text);
+  box-shadow: 0px 10px 20px #0000000a;
+}
+
+input:focus{
+  border-color: #1725544d;
+  box-shadow: 0px 0px 0px 4px #7ad9c833, 0px 10px 20px #0000000a;
+}
+
+button[type="submit"]{
+  margin-top: 6px;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 14px;
+  font-weight: 1000;
+  cursor: pointer;
+  color: #0f172a;
+  background: linear-gradient(135deg, var(--primary) 0%, #b6f3e6 100%);
+  box-shadow: 0px 14px 28px #0b12201a;
+  position: relative;
+}
+
+button[type="submit"]:hover{
+  transform: translateY(-1px);
+  box-shadow: 0px 18px 34px #0b12201f;
+}
+
+button[type="submit"]:active{
+  transform: translateY(0px);
+  box-shadow: 0px 14px 28px #0b12201a;
+}
+
+a[href="/sign-up"],
+a[href="/login"]{
+  margin-top: 14px;
+  width: 100%;
+  max-width: 520px;
+  text-align: center;
+  display: block;
+  text-decoration: none;
+  font-weight: 1000;
+  color: var(--text);
+  background: linear-gradient(135deg, #ffffff 0%, #f7fffe 100%);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 12px 14px;
+  box-shadow: 0px 14px 28px #0b12201a;
+}
+
+a[href="/sign-up"]:hover,
+a[href="/login"]:hover{
+  transform: translateY(-1px);
+  box-shadow: 0px 18px 34px #0b12201f;
+}
+
+#login,#signup{
+  width: 100%;
+  max-width: 520px;
+}
+
+#login > p{
+  display: none;
+}
+
+body > div > p:first-child{
+  display: none;
+}
+
+form[action="/login"] input[name="password"],
+form[action="/sign-up"] input[name="password"]{
+  font-family: ui-rounded, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}

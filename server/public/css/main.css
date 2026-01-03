@@ -1,0 +1,21 @@
+:root {
+  --theme1: #cfece4;
+}
+
+body {
+  background-color: var(--theme1);
+}
+
+input,
+button {
+  border-radius: 5px;
+}
+
+button {
+  background-color: #67c5b7;
+}
+
+.errors {
+  color: #ff3f3f;
+  min-height: 48px;
+}
