@@ -54,7 +54,6 @@ export default class Login {
         }
         // window.location.href = "/index.html";
       } catch (error) {
-        console.error(error);
         this.displayError(error.message);
       }
     });

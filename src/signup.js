@@ -139,7 +139,6 @@ export default class Signup {
       window.location.assign("/index.html");
     } catch (err) {
       this.setError(err?.message || "Signup failed.");
-      console.error(err);
     } finally {
       this.setLoading(false);
     }

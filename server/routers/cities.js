@@ -7,10 +7,13 @@ const { authenticate } = require("../controllers/sharedController");
 router.get("/", authenticate, async (req, res, next) => {
   try {
     const rows = await db.getAllCities(req.user.id);
-    console.log(rows);
-    // const cities = rows.map(r => r.city_name);       // 👈 normalize
-    // res.json({ cities });
-    res.json({ cities: rows });
+    // rows is an array of object
+    // [
+    //    {"city_name": "Rasht"},
+    //    {"city_name": "Tehran"}
+    //                              ]
+    const cities = rows.map((row) => row.city_name);
+    res.json({ cities });
   } catch (err) {
     next(err);
   }
@@ -21,8 +24,8 @@ router.post("/", authenticate, async (req, res, next) => {
   try {
     const { city_name } = req.body;
     if (!city_name) return res.status(400).json({ msg: "city_name required" });
-    const row = await db.addUserCity(req.user.id, city_name.trim());
-    res.status(201).json({ city: row.city_name });
+    await db.addUserCity(req.user.id, city_name.trim());
+    res.status(201);
   } catch (err) {
     next(err);
   }

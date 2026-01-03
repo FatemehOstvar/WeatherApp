@@ -38,16 +38,49 @@ class Main {
     this.organizer = new Organizer();
   }
 
-  SetCity() {
+  // SetCity() {
+  //   const btn = document.querySelector('button[name="change-city"]');
+  //   btn.innerHTML = ``;
+  //   btn.addEventListener("click", async () => {
+  //     this.enteredCity = prompt("City?");
+  //     this.extractor = new Extractor(this.enteredCity, this.unit);
+  //     await this.display();
+  //   });
+  // }
+  async SetCity() {
     const btn = document.querySelector('button[name="change-city"]');
+
     btn.innerHTML = `<svg  height="40px" width="40px" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
              viewBox="0 0 264.018 264.018" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
             <g id="SVGRepo_iconCarrier"> <g> <path
                     d="M132.009,0c-42.66,0-77.366,34.706-77.366,77.366c0,11.634,2.52,22.815,7.488,33.24c0.1,0.223,0.205,0.442,0.317,0.661 l58.454,113.179c2.146,4.154,6.431,6.764,11.106,6.764c4.676,0,8.961-2.609,11.106-6.764l58.438-113.148 c0.101-0.195,0.195-0.392,0.285-0.591c5.001-10.455,7.536-21.67,7.536-33.341C209.375,34.706,174.669,0,132.009,0z M132.009,117.861c-22.329,0-40.495-18.166-40.495-40.495c0-22.328,18.166-40.494,40.495-40.494s40.495,18.166,40.495,40.494 C172.504,99.695,154.338,117.861,132.009,117.861z"></path>
                 <path d="M161.81,249.018h-59.602c-4.143,0-7.5,3.357-7.5,7.5c0,4.143,3.357,7.5,7.5,7.5h59.602c4.143,0,7.5-3.357,7.5-7.5 C169.31,252.375,165.952,249.018,161.81,249.018z"></path> </g> </g></svg>`;
+
     btn.addEventListener("click", async () => {
-      this.enteredCity = prompt("City?");
+      const raw = await this.openCityModal(this.enteredCity);
+      if (raw == null) return;
+
+      const normalized = this.normalizeCityName(raw);
+
+      if (!this.isValidCityFormat(normalized)) {
+        alert("Invalid city name format.");
+        return;
+      }
+
+      const ok = await this.ensureCityExistsInWeather(normalized);
+      if (!ok) {
+        alert("City not found. Please enter a real city.");
+        return;
+      }
+
+      this.enteredCity = normalized;
+
+      localStorage.setItem("selectedCity", normalized);
+      const url = new URL(window.location.href);
+      url.searchParams.set("city", normalized);
+      window.history.replaceState({}, "", url);
+
       this.extractor = new Extractor(this.enteredCity, this.unit);
       await this.display();
     });
@@ -56,7 +89,6 @@ class Main {
   removeAddCitySVG() {
     const btn = document.querySelector('button[name="addAddCitySVG"]');
     btn.innerHTML = ``;
-    console.log("i'm in it");
     btn.style.display = "none";
   }
 
@@ -71,15 +103,32 @@ class Main {
                         points="18.539,7.233 15.898,7.233 15.898,10.242 12.823,10.242 12.823,12.887 15.898,12.887 15.898,15.985 18.539,15.985 18.539,12.887 21.576,12.887 21.576,10.242 18.539,10.242 "></polygon> </g>
                 <g id="Capa_1_146_"> </g> </g> </g></svg>`;
     btn.addEventListener("click", async () => {
-      await fetch("http://localhost:3006/api/cities", {
+      const city = this.normalizeCityName(this.enteredCity);
+      if (!this.isValidCityFormat(city)) {
+        alert("Invalid city name.");
+        return;
+      }
+      const res = await fetch("http://localhost:3006/api/cities", {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: { city_name: this.enteredCity },
+        body: JSON.stringify({ city_name: this.enteredCity }),
       });
+
+      if (res.status === 409) {
+        alert("That city is already saved.");
+        return;
+      }
+      if (!res.ok) {
+        const msg = await res.text();
+        alert(`Failed to save city: ${res.status} ${msg}`);
+        return;
+      }
+
+      btn.style.color = "rgb(232 80 250)";
     });
   }
 
@@ -105,7 +154,6 @@ class Main {
     const btn = document.querySelector('button[name="account"]');
 
     btn.addEventListener("click", async () => {
-      alert(this.role);
       if (this.role === "user") {
         window.location.href = "/pages/cities.html";
         console.log("user\n\n");
@@ -189,6 +237,84 @@ class Main {
     this.sign[this.unit] === this.sign["metric"]
       ? (thermometer.innerHTML = Cbtn)
       : (thermometer.innerHTML = FbtnSVG);
+  }
+
+  normalizeCityName(s) {
+    return s
+      .trim()
+      .replace(/\s+/g, " ")
+      .toLowerCase()
+      .replace(/\b\p{L}/gu, (ch) => ch.toUpperCase());
+  }
+
+  // allow letters + spaces + - ' .  (no digits, no random "rfdfd" prevention alone,
+  // but this blocks obvious garbage; true validation is server-side check below)
+  isValidCityFormat(s) {
+    const v = s.trim();
+    if (v.length < 2 || v.length > 60) return false;
+    return /^[\p{L}]+(?:[ .'-][\p{L}]+)*$/u.test(v);
+  }
+
+  async ensureCityExistsInWeather(city) {
+    try {
+      let res = await fetch(
+        "http://localhost:3006/api/validateCity?city=" + city,
+      );
+      res = await res.json();
+      if (res.valid === true) {
+        return true;
+      }
+    } catch {
+      return false;
+    }
+  }
+
+  ensureCityDialog() {
+    let dlg = document.getElementById("cityDialog");
+    if (dlg) return dlg;
+
+    dlg = document.createElement("dialog");
+    dlg.id = "cityDialog";
+    dlg.innerHTML = `
+    <form method="dialog" class="cityDialog__panel">
+      <h3 class="cityDialog__title">Choose a city</h3>
+
+      <label class="cityDialog__label">
+        City name
+        <input id="cityDialogInput" class="cityDialog__input" autocomplete="off" />
+      </label>
+
+      <p id="cityDialogHint" class="cityDialog__hint">Use real city names (e.g., Rasht, New York).</p>
+      <p id="cityDialogError" class="cityDialog__error" role="alert" aria-live="polite"></p>
+
+      <div class="cityDialog__actions">
+        <button value="cancel" class="cityDialog__btn cityDialog__btn--ghost">Cancel</button>
+        <button id="cityDialogOk" value="ok" class="cityDialog__btn">Apply</button>
+      </div>
+    </form>
+  `;
+    document.body.appendChild(dlg);
+    return dlg;
+  }
+
+  openCityModal(initialValue = "") {
+    const dlg = this.ensureCityDialog();
+    const input = dlg.querySelector("#cityDialogInput");
+    const err = dlg.querySelector("#cityDialogError");
+
+    err.textContent = "";
+    input.value = initialValue;
+
+    return new Promise((resolve) => {
+      const onClose = () => {
+        dlg.removeEventListener("close", onClose);
+        resolve(dlg.returnValue === "ok" ? input.value : null);
+      };
+      dlg.addEventListener("close", onClose);
+      dlg.showModal();
+      input.focus();
+      input.select();
+    });
   }
 }
 

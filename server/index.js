@@ -39,9 +39,9 @@ app.get("/api/key", (req, res) => {
 });
 //
 const citiesRouter = require("./routers/cities");
-
-app.get("/api/settings", settingsRouter);
-
+const validateCity = require("./routers/validateCity");
+app.use("/api/settings", settingsRouter);
+app.use("/api/validateCity", validateCity);
 app.use("/api/cities", citiesRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/user", userRouter);

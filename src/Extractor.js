@@ -16,6 +16,12 @@ export class Extractor {
     this.data = await temperature.json();
   }
 
+  // async checkAvailability(city, unit) {
+  //   try {
+  //
+  //   }
+  // }
+
   async extractCurrent() {
     return [
       {

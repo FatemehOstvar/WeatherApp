@@ -58,7 +58,6 @@ export class Logger {
   async logWeatherAsBG(iconText) {
     const weatherAsBG = document.querySelector("#app");
     weatherAsBG.style.backgroundImage = `url(${this.wAnimation()})`;
-    console.log(weatherAsBG);
   }
 
   wAnimation() {
@@ -69,7 +68,6 @@ export class Logger {
     let dom1 = new Array(24);
     let dom2 = new Array(24);
     let dom3 = new Array(24);
-    console.log(Info.length, type);
     //get dom
     for (let i = 1; i <= Info.length; i++) {
       dom1[i - 1] = document.querySelector(

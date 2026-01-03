@@ -116,8 +116,6 @@ const register = [
       const payload = { id: user.id, username: user.username, role: user.role };
       const accessToken = generateAccessToken(payload);
       const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN);
-
-      console.log(accessToken);
       refreshTokens.push(refreshToken);
       //TODO set cookie
       setAuthCookies(res, accessToken, refreshToken);
@@ -151,7 +149,6 @@ async function logIn(req, res, next) {
     const payload = { id: user.id, username: user.username, role: user.role };
     const accessToken = generateAccessToken(payload);
     const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN);
-    console.log(accessToken);
     refreshTokens.push(refreshToken);
     setAuthCookies(res, accessToken, refreshToken);
     return res.json({ msg: "successfully logged in" });

@@ -416,4 +416,92 @@ h3,
 }
 
 
+/* City dialog (no animation) */
+#cityDialog {
+    border: none;
+    padding: 0;
+    background: transparent;
+}
+
+#cityDialog::backdrop {
+    background: rgb(0 0 0 / 55%);
+}
+
+.cityDialog__panel {
+    width: min(520px, 92vw);
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background: var(--app-bg);
+    box-shadow: var(--shadow);
+    padding: 16px;
+    color: var(--text);
+}
+
+.cityDialog__title {
+    margin: 0 0 12px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+
+.cityDialog__label {
+    display: grid;
+    gap: 6px;
+    font-weight: 800;
+    color: var(--muted);
+}
+
+.cityDialog__input {
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    padding: 0 12px;
+    font: inherit;
+    outline: none;
+}
+
+.cityDialog__input:focus-visible {
+    outline: 3px solid rgb(59 130 246 / 35%);
+    outline-offset: 2px;
+}
+
+.cityDialog__hint {
+    margin: 10px 0 0;
+    color: var(--muted-2);
+    font-weight: 650;
+}
+
+.cityDialog__error {
+    margin: 8px 0 0;
+    min-height: 18px;
+    color: #ef4444;
+    font-weight: 800;
+}
+
+.cityDialog__actions {
+    margin-top: 14px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.cityDialog__btn {
+    height: 44px;
+    padding: 0 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--text);
+    color: var(--app-bg);
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.cityDialog__btn--ghost {
+    background: transparent;
+    color: var(--text);
+}
+
+
+
 
