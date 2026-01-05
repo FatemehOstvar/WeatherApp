@@ -1,7 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-
+const path = require("path");
+const distPath = path.join(__dirname, "..", "dist");
+app.use(express.static(distPath));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(distPath, "index.html"));
+});
 require("dotenv").config({ path: __dirname + "/.env" });
 
 const cookieParser = require("cookie-parser");

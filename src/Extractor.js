@@ -8,7 +8,7 @@ export class Extractor {
   }
 
   async extract() {
-    const res = await fetch("http://localhost:3006/api/key");
+    const res = await fetch("/api/key");
     const data = await res.json();
     const temperature = await fetch(
       `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${this.city}?unitGroup=${this.unit}&key=${data["key"]}`,
