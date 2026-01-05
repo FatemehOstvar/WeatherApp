@@ -32,7 +32,6 @@ export class Logger {
     Dom[0].textContent = `${Info[0][1]} ${unit}`;
     Dom[1].textContent = `${Info[1][1]}`;
     Dom[2].textContent = `${Info[2][0]} : ${Info[2][1]} ${unit}`;
-    console.log();
     // console.log(typeof Info)
     let DomTitle = new Array(Info.length - cnt);
     let DomContent = new Array(Info.length - cnt);

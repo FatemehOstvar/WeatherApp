@@ -4,7 +4,6 @@ const userModel = require("../db/queries");
 
 async function viewMessagesWithData(req, res, next) {
   const contentR = await userModel.getAllMessages();
-  console.log(contentR);
   res.render("messages", {
     pageCss: "messages.css",
     messages: contentR,

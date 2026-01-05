@@ -35,7 +35,7 @@ function renderCities(cities) {
 
     btn.addEventListener("click", () => {
       localStorage.setItem("selectedCity", city);
-      const url = new URL("/pages/index.html", window.location.origin);
+      const url = new URL("/index.html", window.location.origin);
       url.searchParams.set("city", city);
       window.location.href = url.toString();
     });
@@ -73,12 +73,12 @@ function listenForSignOut() {
   const logout = document.querySelector("#logout");
 
   logout.addEventListener("click", async () => {
-    const res = await fetch("/api/auth//logout", {
+    const res = await fetch("/api/auth/logout", {
       method: "POST",
       credentials: "include",
     });
-    if (res.ok) {
-      window.location = "./index.html";
+    if (res.status === 204) {
+      window.location = "/index.html";
     }
   });
 }

@@ -24,9 +24,6 @@ function optionalAuth(req, res, next) {
     ? authHeader.split(" ")[1]
     : null;
 
-  console.log(req.cookies);
-  console.log(req.cookies?.accessToken);
-
   const token = bearer || req.cookies?.accessToken || null;
   req.user = { role: "spectator" };
 

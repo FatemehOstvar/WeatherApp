@@ -156,10 +156,8 @@ class Main {
     btn.addEventListener("click", async () => {
       if (this.role === "user") {
         window.location.href = "/pages/cities.html";
-        console.log("user\n\n");
       } else if (this.role === "admin") {
         window.location.href = "/pages/cities.html";
-        console.log("admin\n\n");
       } else {
         window.location.href = "/pages/signup.html";
       }
@@ -257,9 +255,7 @@ class Main {
 
   async ensureCityExistsInWeather(city) {
     try {
-      let res = await fetch(
-        "/api/validateCity?city=" + city,
-      );
+      let res = await fetch("/api/validateCity?city=" + city);
       res = await res.json();
       if (res.valid === true) {
         return true;

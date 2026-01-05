@@ -19,7 +19,6 @@ async function addUser({
   console.log(typeof password);
   const hash = await bcrypt.hash(password, 10);
 
-  console.log(typeof hash);
   const result = await pool.query(
     `
       INSERT INTO users (username, first_name, last_name, password, role)

@@ -1,3 +1,5 @@
+require("dotenv").config({ path: __dirname + "/.env" });
+
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -7,19 +9,20 @@ app.use(express.static(distPath));
 app.get("/", (req, res) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
-require("dotenv").config({ path: __dirname + "/.env" });
-
+app.get("/pages/login", (req, res) => res.redirect("/pages/login.html"));
+app.get("/pages/signup", (req, res) => res.redirect("/pages/signup.html"));
+app.get("/pages/cities", (req, res) => res.redirect("/pages/cities.html"));
 const cookieParser = require("cookie-parser");
 
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "OPTIONS"], //, "PUT", "PATCH", "DELETE"
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }),
-);
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173",
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "OPTIONS"], //, "PUT", "PATCH", "DELETE"
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   }),
+// );
 
 app.use(express.json());
 app.set("trust proxy", 1);
@@ -49,7 +52,6 @@ app.use("/api/validateCity", validateCity);
 app.use("/api/cities", citiesRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/user", userRouter);
-// app.use("/api/", spectatorRouter);
 
 app.listen(port, () => {
   console.log(`Server listening on port http://localhost:${port}`);
