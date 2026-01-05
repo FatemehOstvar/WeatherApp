@@ -48,7 +48,7 @@ function renderCities(cities) {
 
 async function loadCities() {
   try {
-    const res = await fetch("http://localhost:3006/api/cities", {
+    const res = await fetch("/api/cities", {
       method: "GET",
       credentials: "include",
       headers: { Accept: "application/json" },
@@ -73,7 +73,7 @@ function listenForSignOut() {
   const logout = document.querySelector("#logout");
 
   logout.addEventListener("click", async () => {
-    const res = await fetch("http://localhost:4000/token/logout", {
+    const res = await fetch("/api/auth//logout", {
       method: "POST",
       credentials: "include",
     });

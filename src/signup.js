@@ -147,7 +147,7 @@ export default class Signup {
   async sendForm(data) {
     let res;
     try {
-      res = await fetch("http://localhost:4000/register", {
+      res = await fetch("/api/auth/register", {
         method: "POST",
         credentials: "include",
         headers: {

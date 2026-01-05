@@ -17,17 +17,16 @@ app.use(
 );
 
 app.use(express.json());
-
+app.set("trust proxy", 1);
 app.use(express.urlencoded({ extended: true }));
 const { settingsRouter } = require("./routers/settingsRouter");
-
 const { adminRouter } = require("./routers/admin");
 const { userRouter } = require("./routers/members");
-//
+const authRouter = require("./routers/auth");
 // const { join } = require("node:path");
 
-const port = process.env.MAIN_PORT;
-
+const port = process.env.PORT;
+app.use("/api/auth", authRouter);
 // some spaghetti
 const { optionalAuth } = require("./controllers/sharedController");
 

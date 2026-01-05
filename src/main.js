@@ -108,7 +108,7 @@ class Main {
         alert("Invalid city name.");
         return;
       }
-      const res = await fetch("http://localhost:3006/api/cities", {
+      const res = await fetch("/api/cities", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -134,7 +134,7 @@ class Main {
 
   async getRole() {
     try {
-      const res = await fetch("http://localhost:3006/api/role", {
+      const res = await fetch("/api/role", {
         method: "GET",
         credentials: "include",
         headers: { Accept: "application/json" },
@@ -258,7 +258,7 @@ class Main {
   async ensureCityExistsInWeather(city) {
     try {
       let res = await fetch(
-        "http://localhost:3006/api/validateCity?city=" + city,
+        "/api/validateCity?city=" + city,
       );
       res = await res.json();
       if (res.valid === true) {

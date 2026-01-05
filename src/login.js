@@ -9,7 +9,7 @@ export default class Login {
   async sendForm(data) {
     let response;
     try {
-      response = await fetch("http://localhost:4000/login", {
+      response = await fetch("/api/auth/login", {
         method: "POST",
         credentials: "include",
         headers: {
