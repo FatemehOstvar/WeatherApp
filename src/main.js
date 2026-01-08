@@ -63,10 +63,10 @@ class Main {
 
       const normalized = this.normalizeCityName(raw);
 
-      if (!this.isValidCityFormat(normalized)) {
-        alert("Invalid city name format.");
-        return;
-      }
+      // if (!this.isValidCityFormat(normalized)) {
+      //   alert("Invalid city name format.");
+      //   return;
+      // }
 
       const [ok, resolved] = await this.ensureCityExistsInWeather(normalized);
       if (!ok) {
@@ -76,9 +76,9 @@ class Main {
 
       this.enteredCity = resolved;
 
-      localStorage.setItem("selectedCity", normalized);
+      localStorage.setItem("selectedCity", resolved);
       const url = new URL(window.location.href);
-      url.searchParams.set("city", normalized);
+      url.searchParams.set("city", resolved);
       window.history.replaceState({}, "", url);
 
       this.extractor = new Extractor(this.enteredCity, this.unit);
@@ -94,7 +94,7 @@ class Main {
 
   addAddCitySVG() {
     const btn = document.querySelector('button[name="addAddCitySVG"]');
-    btn.innerHTML = `<svg  height="200px" width="200px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+    btn.innerHTML = `<svg  height="200px" width="200px" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
              viewBox="0 0 34.398 34.398" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g>
             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
             <g id="SVGRepo_iconCarrier"> <g> <g id="c28_geolocalization"> <path
@@ -103,11 +103,11 @@ class Main {
                         points="18.539,7.233 15.898,7.233 15.898,10.242 12.823,10.242 12.823,12.887 15.898,12.887 15.898,15.985 18.539,15.985 18.539,12.887 21.576,12.887 21.576,10.242 18.539,10.242 "></polygon> </g>
                 <g id="Capa_1_146_"> </g> </g> </g></svg>`;
     btn.addEventListener("click", async () => {
-      const city = this.normalizeCityName(this.enteredCity);
-      if (!this.isValidCityFormat(city)) {
-        alert("Invalid city name.");
-        return;
-      }
+      this.normalizeCityName(this.enteredCity);
+      // if (!this.isValidCityFormat(city)) {
+      //   alert("Invalid city name.");
+      //   return;
+      // }
       const res = await fetch("/api/cities", {
         method: "POST",
         credentials: "include",
