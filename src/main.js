@@ -68,13 +68,13 @@ class Main {
         return;
       }
 
-      const ok = await this.ensureCityExistsInWeather(normalized);
+      const [ok, resolved] = await this.ensureCityExistsInWeather(normalized);
       if (!ok) {
         alert("City not found. Please enter a real city.");
         return;
       }
 
-      this.enteredCity = normalized;
+      this.enteredCity = resolved;
 
       localStorage.setItem("selectedCity", normalized);
       const url = new URL(window.location.href);
@@ -258,7 +258,7 @@ class Main {
       let res = await fetch("/api/validateCity?city=" + city);
       res = await res.json();
       if (res.valid === true) {
-        return true;
+        return [true, res.resolvedAddress];
       }
     } catch {
       return false;
