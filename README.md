@@ -16,20 +16,23 @@ A full-stack weather app that lets you search by city and view current condition
 
 ---
 
-## ✨ Highlights
+## ✨ Features
 
 * Displays **weather conditions**
-* Responsive UI
 * Metric toggling
+* Search For cities
+* Sign up + Login + Sign out
 * Save city as a logged in user
+* Displays the list of cities
 * Authentications using JWT tokens
 * **Input validation** for cleaner, safer requests
+* Responsive UI
   
 ---
 
 ## 🧱 Tech Stack
 
-* **Frontend:** Vite (source in `src/`)
+* **Frontend:** Java script + Html+ Css + Vite (source in `src/`)
 * **Backend:** Node.js + Express (source in `server/`)
 * **Deployment:** Render
 
