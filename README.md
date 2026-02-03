@@ -4,7 +4,6 @@
 [![Repository](https://img.shields.io/badge/GitHub-FatemehOstvar%2FWeatherApp-181717?style=for-the-badge\&logo=github)](https://github.com/FatemehOstvar/WeatherApp)
 
 [![Last Commit](https://img.shields.io/github/last-commit/FatemehOstvar/WeatherApp)](https://github.com/FatemehOstvar/WeatherApp/commits/main)
-[![CI](https://img.shields.io/badge/CI-not%20configured-lightgrey)](#)
 [![Top Language](https://img.shields.io/github/languages/top/FatemehOstvar/WeatherApp)](https://github.com/FatemehOstvar/WeatherApp)
 
 A full-stack weather app that lets you search by city and view current conditions. The frontend is built with **Vite**, and the backend serves the production build for deployment.
