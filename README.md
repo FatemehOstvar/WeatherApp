@@ -30,7 +30,7 @@ A full-stack weather app that lets you search by city and view current condition
 ## 🧱 Tech Stack
 
 * **Frontend:** Java script + Html+ Css + Vite (source in `src/`)
-* **Backend:** Node.js + Express + PostgreSql on Neon (source in `server/`)
+* **Backend:** Node.js + Express + PostgreSQL on Neon (source in `server/`)
 * **Deployment:** Render
 
 
