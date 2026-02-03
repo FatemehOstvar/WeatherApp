@@ -5,9 +5,6 @@
 
 [![Last Commit](https://img.shields.io/github/last-commit/FatemehOstvar/WeatherApp)](https://github.com/FatemehOstvar/WeatherApp/commits/main)
 [![CI](https://img.shields.io/badge/CI-not%20configured-lightgrey)](#)
-[![Stars](https://img.shields.io/github/stars/FatemehOstvar/WeatherApp?style=flat)](https://github.com/FatemehOstvar/WeatherApp/stargazers)
-[![Forks](https://img.shields.io/github/forks/FatemehOstvar/WeatherApp?style=flat)](https://github.com/FatemehOstvar/WeatherApp/network/members)
-[![Issues](https://img.shields.io/github/issues/FatemehOstvar/WeatherApp?style=flat)](https://github.com/FatemehOstvar/WeatherApp/issues)
 [![Top Language](https://img.shields.io/github/languages/top/FatemehOstvar/WeatherApp)](https://github.com/FatemehOstvar/WeatherApp)
 
 A full-stack weather app that lets you search by city and view current conditions. The frontend is built with **Vite**, and the backend serves the production build for deployment.
@@ -33,77 +30,9 @@ A full-stack weather app that lets you search by city and view current condition
 ## 🧱 Tech Stack
 
 * **Frontend:** Java script + Html+ Css + Vite (source in `src/`)
-* **Backend:** Node.js + Express (source in `server/`)
+* **Backend:** Node.js + Express + PostgreSql on Neon (source in `server/`)
 * **Deployment:** Render
 
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-* Node.js (LTS recommended)
-* Package manager: **pnpm** (recommended) or npm
-
-### Install
-
-```bash
-git clone https://github.com/FatemehOstvar/WeatherApp.git
-cd WeatherApp
-```
-
-Using **pnpm**:
-
-```bash
-pnpm install
-```
-
-Using **npm**:
-
-```bash
-npm install
-```
-
-### Run (development)
-
-```bash
-pnpm dev
-# or
-npm run dev
-```
-
-### Build (production)
-
-```bash
-pnpm build
-# or
-npm run build
-```
-
-### Start (production)
-
-```bash
-pnpm start
-# or
-npm start
-```
-
-
-
-## 📁 Project Structure
-
-```txt
-WeatherApp/
-  ├─ src/            # frontend source
-  ├─ server/         # backend (Express)
-  ├─ pages/          # optional static pages (if used)
-  ├─ docs/           # documentation
-  ├─ index.html
-  ├─ vite.config.js
-  └─ package.json
-```
-
----
 
 ## 🤝 Contributing
 
