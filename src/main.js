@@ -194,7 +194,7 @@ class Main {
 
   createSpecificThermometer() {
     const thermometer = document.querySelector("#thermometer");
-    thermometer.innerHTML = "";
+
     const FbtnSVG =
       '<svg width="40px" height="40px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg"\n' +
       "        >\n" +
